@@ -1,4 +1,6 @@
-﻿namespace server.Models
+﻿using server.DAL;
+
+namespace server.Models
 {
     public class User
     {
@@ -18,5 +20,16 @@
             Active = active;
         }
 
+        public int Register()
+        {
+            DBservicesUser db = new DBservicesUser();
+            return db.InsertUser(this);  
+        }
+
+        public User? Login(string name, string password)
+        {
+            DBservicesUser db = new DBservicesUser();
+            return db.LoginUser(name, password); 
+        }
     }
 }

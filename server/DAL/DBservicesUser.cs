@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Xml.Linq;
 using server.Models;
 
 namespace server.DAL
@@ -75,6 +76,58 @@ namespace server.DAL
                 if (ex.Number == 2627 || ex.Number == 2601)
                     return 3;
                 throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public User? LoginUser(string name, string password)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            Dictionary<string, object> paramDic = new Dictionary<string, object>
+                {
+                    { "@name", name },
+                    { "@password", password }
+                };
+
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_loginUser_FP", con, paramDic);
+
+            User? u = null;
+
+            try
+            {
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    u = new User
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        Name = reader["Name"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        Active = Convert.ToBoolean(reader["Active"])
+                    };
+                }
+
+                return u;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             finally
             {

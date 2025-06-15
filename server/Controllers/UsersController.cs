@@ -10,17 +10,17 @@ namespace server.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        DBservicesUser db = new DBservicesUser();
-
         // POST api/Users
         [HttpPost]
         public IActionResult Register([FromBody] User user)
         {
             try
             {
-                int res = db.InsertUser(user);
+                int res = user.Register();
                 if (res == 1)
-                    return Ok("User register successfully");
+                    return Ok(true);
+                else if (res == 3)
+                    return Conflict("Username or Email already exists.");
                 else
                     return BadRequest("User registration failed");
             }
@@ -29,6 +29,22 @@ namespace server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        // POST: api/User/login
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] User loginUser)
+        {
+            User user = new User();
+            User? existingUser = user.Login(loginUser.Name, loginUser.Password);
+
+            if (existingUser == null)
+            {
+                return Unauthorized("Invalid name or password.");
+            }
+
+            return Ok(existingUser);
+        }
+
 
         // GET: api/<UsersController>
         [HttpGet]
