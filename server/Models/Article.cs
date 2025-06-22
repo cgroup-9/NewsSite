@@ -10,7 +10,7 @@
         public string? UrlToImage { get; set; } 
         public string PublishedAt { get; set; }
         public string? Content { get; set; }
-
+        public string? Category { get; set; }
         public Article() { }
 
         public Article(Source? source, string? author, string title, string? description, string url, string? urlToImage, string publishedAt, string? content)

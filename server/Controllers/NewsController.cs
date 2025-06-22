@@ -18,11 +18,23 @@ namespace server.Controllers
 
         // GET api/news?country=il
         [HttpGet]
-        public async Task<IActionResult> GetNews([FromQuery] string country = "us")
+        public async Task<IActionResult> GetNews([FromQuery] string country = "us", [FromQuery] string? categories = null)
         {
             try
             {
-                List<Article> articles = await news.GetTopHeadlinesAsync(country);
+                List<Article> articles = await news.GetTopHeadlinesAsync(country, categories);
+
+                if (!string.IsNullOrEmpty(categories))
+                {
+                    var categoriesList = categories.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                                   .Select(c => c.ToLowerInvariant())
+                                                   .ToList();
+
+                    articles = articles.Where(article =>
+                        article.Category == null || 
+                        categoriesList.Contains(article.Category.ToLowerInvariant()) 
+                    ).ToList();
+                }
                 return Ok(articles);
             }
             catch (Exception ex)

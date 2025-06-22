@@ -9,6 +9,7 @@ namespace server.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public bool Active { get; set; } = true;
+        public List<Tag>? Tags { get; set; } = new List<Tag>();
 
         public User() { }
 
