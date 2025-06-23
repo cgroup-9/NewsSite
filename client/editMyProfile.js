@@ -5,11 +5,11 @@
         return location.host.includes("localhost");
     }
 
-    const port = 7110;
+    const port = 7019;
     const baseApiUrl = isDevEnv()
         ? `https://localhost:${port}`
         : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
-    const url = `${baseApiUrl}/api/Users/update-user`;
+    const url = `${baseApiUrl}/api/Users`;
 
     // נקרא את המשתמש הנוכחי מה-sessionStorage
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
