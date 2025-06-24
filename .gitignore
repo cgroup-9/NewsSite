@@ -1,4 +1,26 @@
-bin/ 
-obj/ 
-node_modules/ 
-.vs/ 
+# קבצים זמניים של Visual Studio
+bin/
+obj/
+.vs/
+*.suo
+*.user
+*.cache
+*.vsidx
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+*.log
+*.tmp
+
+# VS Code
+.vscode/
+
+# קבצי מערכת של Windows
+Thumbs.db
+desktop.ini
+
+# קבצי קונפיגורציה עם פרטי חיבור לשרת
+appsettings.json
+appsettings.Development.json
