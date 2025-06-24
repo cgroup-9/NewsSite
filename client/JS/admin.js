@@ -1,5 +1,4 @@
-﻿const STORAGE_KEY = 'adminPanelUsersData'; // כבר לא בשימוש
-let users = [];
+﻿let users = [];
 
 function isDevEnv() {
     return location.host.includes("localhost");
@@ -11,18 +10,6 @@ const baseApiUrl = isDevEnv()
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 const baseUrl = `${baseApiUrl}/api/Users`;
 
-// ========== AJAX HELPER ==========
-function ajaxCall(method, url, data, successCB, errorCB) {
-    $.ajax({
-        type: method,
-        url: url,
-        data: data,
-        contentType: "application/json",
-        dataType: "json",
-        success: successCB,
-        error: errorCB
-    });
-}
 
 // ========== LOAD USERS FROM SERVER ==========
 function loadUsers() {

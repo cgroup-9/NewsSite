@@ -9,9 +9,8 @@
     const baseApiUrl = isDevEnv()
         ? `https://localhost:${port}`
         : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
-    const url = `${baseApiUrl}/api/Users`;
+    const url = `${baseApiUrl}/api/Users/update-user`;
 
-    // נקרא את המשתמש הנוכחי מה-sessionStorage
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
     function updateUser(user) {
@@ -26,14 +25,12 @@
 
     function updateUserSuc(res) {
         try {
-            // אם יש מאפיין בשם message, נציג אותו
             if (res && res.message) {
                 alert("✅ " + res.message);
             } else {
-                alert("✅ Profile updated successfully."); // ברירת מחדל
+                alert("✅ Profile updated successfully."); 
             }
 
-            // עדכון sessionStorage עם הערכים החדשים
             const updatedUser = {
                 name: $("#usernameTB").val().trim() || currentUser.name,
                 password: $("#passwordTB").val().trim() || $("#currentPasswordTB").val().trim(),
@@ -42,7 +39,6 @@
 
             sessionStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
-            // ריענון כדי לעדכן את הטופס עם placeholder חדש
             location.reload();
         } catch (e) {
             alert("⚠️ Profile updated, but response was invalid.");
@@ -95,14 +91,13 @@
         $(".error-msg").text("");
         let hasError = false;
 
-        // דרישה: לפחות סיסמה נוכחית או סיסמה חדשה תקינה
+        // the user must put the current password or a new valid password
         if (inputPassword === "" && currentPassword === "") {
             $("#currentPasswordTB").addClass("invalid");
             $("#err-currentPasswordTB").text("You must enter your current password or a valid new password.");
             hasError = true;
         }
 
-        // אם הוזנה סיסמה חדשה, נבדוק את תקינותה
         if (inputPassword !== "") {
             const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
             if (!passRegex.test(inputPassword)) {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using server.DAL;
 using server.Models;
+using System.Text.Json;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace server.Controllers
 {
@@ -10,67 +10,142 @@ namespace server.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        // POST api/Users
-        [HttpPost]
-        public IActionResult Register([FromBody] User user)
+        // POST: api/User/register
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] Users user)
         {
-            try
+            int result = user.Register();
+
+            if (result == 0)
             {
-                int res = user.Register();
-                if (res == 1)
-                    return Ok(true);
-                else if (res == 3)
-                    return Conflict("Username or Email already exists.");
-                else
-                    return BadRequest("User registration failed");
+                return Ok(true);
             }
-            catch (Exception ex)
+            else if (result == 3)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest("Username or email already exists.");
+            }
+            else
+            {
+                return BadRequest("Unknown error occurred.");
             }
         }
 
+
         // POST: api/User/login
         [HttpPost("login")]
-        public IActionResult Login([FromBody] User loginUser)
+        public IActionResult Login([FromBody] Users loginUser)
         {
-            User user = new User();
-            User? existingUser = user.Login(loginUser.Name, loginUser.Password);
+            Users user = new Users();
+            Users? existingUser = user.Login(loginUser.Email, loginUser.Password);
 
             if (existingUser == null)
             {
-                return Unauthorized("Invalid name or password.");
+                return Unauthorized("Invalid email or password.");
             }
 
             return Ok(existingUser);
         }
-
-
-        // GET: api/<UsersController>
+        // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<Users>> GetAllUsers()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(Users.Read());
         }
 
-        // GET api/<UsersController>/5
+        // GET: api/User/{id}
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<string> GetUserById(int id)
         {
-            return "value";
+            return Ok($"You requested user with ID = {id}");
         }
 
-
-        // PUT api/<UsersController>/5
+        // PUT: api/User/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult PutUserById(int id, [FromBody] string value)
         {
+            return Ok($"You updated user {id} with value = {value}");
         }
 
-        // DELETE api/<UsersController>/5
+        // DELETE: api/User/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult DeleteUserById(int id)
         {
+            return Ok($"You deleted user with ID = {id}");
+        }
+
+
+        [HttpPut("update-user")]
+        public IActionResult UpdateUser([FromBody] Users user)
+        {
+            int result = user.Update();
+
+            if (result == 0)
+            {
+                return Ok(new { message = "User updated successfully." });
+            }
+            else if (result == 1)
+            {
+                return NotFound(new { message = "User not found or deleted." });
+            }
+            else
+            {
+                return BadRequest(new { message = "Unknown error occurred." });
+            }
+        }
+
+
+        [HttpPut("update-status")]
+        public async Task<IActionResult> UpdateUserStatus()
+        {
+            try
+            {
+                using var reader = new StreamReader(Request.Body);
+                var body = await reader.ReadToEndAsync();
+
+                var json = JsonDocument.Parse(body);
+                var root = json.RootElement;
+
+                int id = root.GetProperty("id").GetInt32();
+                bool active = root.GetProperty("active").GetBoolean();
+
+                Console.WriteLine($"📥 Received → id: {id}, active: {active}");
+
+                Users user = new Users { Id = id };
+                int result = user.UpdateStatus(active);
+
+                return result switch
+                {
+                    1 => Ok(new { message = "User status updated successfully." }),
+                    0 => NotFound(new { message = "User not found." }),
+                    _ => BadRequest(new { message = "Unknown error occurred." })
+                };
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "❌ Failed to parse request", error = ex.Message });
+            }
+        }
+
+
+        // DELETE: api/User/delete-by-email/{email}
+        [HttpDelete("delete-by-email/{email}")]
+        public IActionResult SoftDeleteUserByEmail(string email)
+        {
+            Users user = new Users();
+            int result = user.SoftDeleteByEmail(email);
+
+            if (result == 0)
+            {
+                return Ok("User deleted successfully.");
+            }
+            else if (result == 1)
+            {
+                return NotFound("User not found or already deleted.");
+            }
+            else
+            {
+                return BadRequest("Unknown error occurred.");
+            }
         }
     }
 }

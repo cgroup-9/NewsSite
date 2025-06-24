@@ -39,8 +39,7 @@ namespace server.DAL
 
             return cmd;
         }
-
-        public int InsertUser(User user)
+        public int InsertUser(Users user)
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -61,15 +60,12 @@ namespace server.DAL
                 { "@email", user.Email }
             };
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_InsertUser_FP", con, paramDic);
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_InsertUser", con, paramDic);
 
             try
             {
-                int rowsAffected = cmd.ExecuteNonQuery();
-                if (rowsAffected > 0)
-                    return 1;
-                else
-                    return 0;
+                cmd.ExecuteNonQuery();
+                return 0;
             }
             catch (SqlException ex)
             {
@@ -83,7 +79,7 @@ namespace server.DAL
             }
         }
 
-        public User? LoginUser(string name, string password)
+        public Users? LoginUser(string email, string password)
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -98,15 +94,14 @@ namespace server.DAL
             }
 
             Dictionary<string, object> paramDic = new Dictionary<string, object>
-                {
-                    { "@name", name },
-                    { "@password", password }
-                };
+            {
+                { "@email", email },
+                { "@password", password }
+            };
 
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_LoginUser", con, paramDic);
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_loginUser_FP", con, paramDic);
-
-            User? u = null;
+            Users? u = null;
 
             try
             {
@@ -114,7 +109,7 @@ namespace server.DAL
 
                 if (reader.Read())
                 {
-                    u = new User
+                    u = new Users
                     {
                         Id = Convert.ToInt32(reader["Id"]),
                         Name = reader["Name"].ToString(),
@@ -124,6 +119,157 @@ namespace server.DAL
                 }
 
                 return u;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public int UpdateUser(Users user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            Dictionary<string, object> paramDic = new Dictionary<string, object>
+    {
+        { "@id", user.Id },
+        { "@name", user.Name },
+        { "@password", user.Password },
+        { "@email", user.Email }
+    };
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUser", con, paramDic);
+
+            SqlParameter returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int);
+            returnValue.Direction = ParameterDirection.ReturnValue;
+            cmd.Parameters.Add(returnValue);
+
+            try
+            {
+                cmd.ExecuteNonQuery();
+                return (int)returnValue.Value; // 0 = הצלחה, 1 = לא נמצא
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2627 || ex.Number == 2601)
+                    return 3;
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+        public int UpdateUserStatus(int id, bool active)
+        {
+            SqlConnection con = connect("myProjDB");
+            Dictionary<string, object> paramDic = new()
+    {
+        { "@id", id },
+        { "@active", active }
+    };
+
+            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUserStatus", con, paramDic);
+
+            try
+            {
+                int rowsAffected = cmd.ExecuteNonQuery();
+                return rowsAffected; // 1 = success, 0 = user not found
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception($"SQL Error during UpdateUserStatus: {ex.Message}", ex);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+        public int SoftDeleteUserByEmail(string email)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            Dictionary<string, object> paramDic = new Dictionary<string, object>
+            {
+                { "@userEmail", email }
+            };
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_DeleteUser", con, paramDic);
+
+            try
+            {
+                cmd.ExecuteNonQuery();
+                return 0;
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("User not found or already deleted"))
+                    return 1;
+                throw;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public List<Users> ReadAllUsers()
+        {
+            List<Users> users = new List<Users>();
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllUsers", con, null);
+
+            try
+            {
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Users u = new Users
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        Name = reader["Name"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        Active = Convert.ToBoolean(reader["Active"])
+                    };
+                    users.Add(u);
+                }
+
+                return users;
             }
             catch (Exception ex)
             {
