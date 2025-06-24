@@ -59,6 +59,7 @@ $(document).ready(() => {
                  <p><strong>Published At:</strong> ${new Date(a.publishedAt).toLocaleString()}</p>
                  <p class="description">${a.description || ''}</p>
                  <p>${a.content || ''}</p>
+                 <p class="categoryTag"> ${a.category || ""}</p>
                  <a href="${a.url}" target="_blank">Read More</a>
                  <button class="saveArticleBtn">Save Article</button>
                  
@@ -67,29 +68,6 @@ $(document).ready(() => {
 
         }
     }
-
-            //    <div class="topcard">
-            //        <button class="btnaddcart" data-id="${m.id}" data-price="${m.priceToRent ?? 40}">Rent me</button>
-            //        <p class="rating">★${m.averageRating}/10</p>
-            //    </div>
-            //    <img class="movieimg" src="${m.primaryImage}" />
-            //    <h2>${m.primaryTitle}</h2>
-            //    <div class="shortinfo">
-            //        <p class="year">${m.startYear || new Date(m.releaseDate).getFullYear()}</p>
-            //        <p class="time">${m.runtimeMinutes} min</p>
-            //        <p class="isAdult">${m.isAdult ? "+18" : "All"}</p>
-            //    </div>
-            //    <p class="description">${m.description}</p>
-            //    <div class="geners">
-            //        ${(m.genres || "").split(',').map(g => `<p class="interests">${g.trim()}</p>`).join("")}
-            //    </div>
-            //    <div class="financial">
-            //        <div class="budget"><h2>Budget</h2><p>${m.budget}</p></div>
-            //        <div class="boxoffice"><h2>Box Office</h2><p>$${m.grossWorldwide}M</p></div>
-            //        <div class="votes"><h2>Votes</h2><p>${m.numVotes}</p></div>
-            //    </div>
-            //</div>`;
-
     function renderPagination() {
         const container = $("#paginationContainer");
         container.empty();
@@ -124,11 +102,16 @@ $(document).ready(() => {
         }
     })
 
-    $(document).on("click", ".readMoreBtn", function () {
-        const articleData = $(this).closest(".articleCard").data("article");  //find article div and take data
-        localStorage.setItem("selectedArticle", JSON.stringify(articleData)); //save article data in local storage
-    //    window.location.href = "article.html";
+    $("#filterBtn").on("click", function () {
+        const categories = $(".categoryCheckbox:checked").map(function () { return $(this).val(); }).get();
+        if (categories.includes("") || categories.length === 0)
+            loadNews();
+        else {
+            const categoryParam = categories.join(',');
+            loadNews(categoryParam);
+        }
     })
+
    
     //function openRentModal(movieId, priceToRent) {
     //    const modal = $("#rentModal");
