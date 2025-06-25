@@ -31,7 +31,7 @@ namespace server.Controllers
         }
 
 
-        // POST: api/User/login
+        // POST: api/Users/login
         [HttpPost("login")]
         public IActionResult Login([FromBody] Users loginUser)
         {
