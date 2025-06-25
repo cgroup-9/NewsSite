@@ -60,7 +60,7 @@ namespace server.DAL
                 { "@email", user.Email }
             };
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_InsertUser", con, paramDic);
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_InsertUser_FP", con, paramDic);
 
             try
             {
@@ -99,7 +99,7 @@ namespace server.DAL
                 { "@password", password }
             };
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_LoginUser", con, paramDic);
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_LoginUser_FP", con, paramDic);
 
             Users? u = null;
 
@@ -152,7 +152,7 @@ namespace server.DAL
         { "@email", user.Email }
     };
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUser", con, paramDic);
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUser_FP", con, paramDic);
 
             SqlParameter returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int);
             returnValue.Direction = ParameterDirection.ReturnValue;
@@ -161,7 +161,7 @@ namespace server.DAL
             try
             {
                 cmd.ExecuteNonQuery();
-                return (int)returnValue.Value; // 0 = הצלחה, 1 = לא נמצא
+                return (int)returnValue.Value; // 1 = success, 0 = user not found
             }
             catch (SqlException ex)
             {
@@ -183,7 +183,7 @@ namespace server.DAL
         { "@active", active }
     };
 
-            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUserStatus", con, paramDic);
+            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUserStatus_FP", con, paramDic);
 
             try
             {
@@ -218,7 +218,7 @@ namespace server.DAL
                 { "@userEmail", email }
             };
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_DeleteUser", con, paramDic);
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_DeleteUser_FP", con, paramDic);
 
             try
             {
@@ -252,7 +252,7 @@ namespace server.DAL
                 throw ex;
             }
 
-            cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllUsers", con, null);
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllUsers_FP", con, null);
 
             try
             {
