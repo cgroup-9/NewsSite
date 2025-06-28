@@ -52,7 +52,7 @@ $(document).ready(() => {
             //const articleData = JSON.stringify(a).replace(/'/g, "&apos");
 
             const cardHtml = `
-            <div class="articleCard" data-article='${JSON.stringify(a)}'>
+            <div class="articleCard" data-article='${a.url}'>
                  <h2>${a.title}</h2>
                  <img src="${a.urlToImage || '../Img/logo.png'}" alt="Image" class="${a.urlToImage ? 'articleImage' : 'articleImage defaultImage'}"  />
                  <p><strong>Author:</strong> ${a.author || 'Unknown'}</p>
@@ -92,6 +92,25 @@ $(document).ready(() => {
         container.html(html);
     }
 
+    function saveArticle(userId, articleUrl) {
+        url = `${baseUrl}/Save-Article`;
+
+        const savedArticle = {
+            userId,
+            articleUrl
+        };
+
+        ajaxCall("POST", url, JSON.stringify(savedArticle),
+            res => {
+                    alert( res.message);
+            },
+            err => {
+                    alert( err.statusText);
+
+            }
+        );
+    }
+
     $(document).on("click", ".paginationBtn", function () {
         const page = $(this).data("page");   //which page was clicked
 
@@ -111,6 +130,14 @@ $(document).ready(() => {
             loadNews(categoryParam);
         }
     })
+
+    $(document).on("click", ".saveArticleBtn", function () {
+        const user = JSON.parse(sessionStorage.getItem('currentUser'));
+        const articleUrl = $(this).closest('.articleCard').data('article');
+        saveArticle(user.id, articleUrl);
+        })
+
+
 
    
     //function openRentModal(movieId, priceToRent) {

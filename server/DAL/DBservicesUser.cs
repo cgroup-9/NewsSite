@@ -145,12 +145,12 @@ namespace server.DAL
             }
 
             Dictionary<string, object> paramDic = new Dictionary<string, object>
-    {
-        { "@id", user.Id },
-        { "@name", user.Name },
-        { "@password", user.Password },
-        { "@email", user.Email }
-    };
+            {
+                { "@id", user.Id },
+                { "@name", user.Name },
+                { "@password", user.Password },
+                { "@email", user.Email }
+            };
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUser_FP", con, paramDic);
 
@@ -178,10 +178,10 @@ namespace server.DAL
         {
             SqlConnection con = connect("myProjDB");
             Dictionary<string, object> paramDic = new()
-    {
-        { "@id", id },
-        { "@active", active }
-    };
+            {
+                { "@id", id },
+                { "@active", active }
+            };
 
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUserStatus_FP", con, paramDic);
 
