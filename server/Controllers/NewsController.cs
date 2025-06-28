@@ -51,9 +51,18 @@ namespace server.Controllers
         }
 
         // POST api/<NewsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("Save-Article")]
+        public IActionResult Post([FromBody] SavedArticle articleToSave)
         {
+            DBservicesArticles db = new DBservicesArticles();
+            int result = db.saveArticle(articleToSave);
+
+            if (result == 1)
+                return Ok(new { message = "Article saved successfully." });
+            if (result == 0)
+                return Ok(new { message = "This article is already saved." });
+            return BadRequest(new { message = "Unknown error occurred." });
+
         }
 
         // PUT api/<NewsController>/5

@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 ﻿using System.Data.SqlClient;
 using System.Data;
+=======
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Xml.Linq;
+using server.Models;
+>>>>>>> eden-save-news
 
 namespace server.DAL
 {
@@ -37,18 +45,55 @@ namespace server.DAL
             return cmd;
         }
 
+<<<<<<< HEAD
         public void IncrementApiFetchCounter()
         {
             SqlConnection con = connect("myProjDB");
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_IncrementApiFetchCounter", con, null);
+=======
+        public int saveArticle(SavedArticle save)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            Dictionary<string, object> paramDic = new Dictionary<string, object>
+            {
+                { "@userId", save.UserId },
+                { "@articleUrl", save.ArticleUrl },
+            };
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_SaveArticle_FP", con, paramDic);
+
+            SqlParameter returnParameter = new SqlParameter();
+            returnParameter.Direction = ParameterDirection.ReturnValue;
+            cmd.Parameters.Add(returnParameter);
+>>>>>>> eden-save-news
 
             try
             {
                 cmd.ExecuteNonQuery();
+<<<<<<< HEAD
             }
             catch (Exception ex)
             {
                 throw new Exception("❌ Failed to update apiFetchCounter: " + ex.Message);
+=======
+                int result = (int)returnParameter.Value; 
+                return result;
+            }
+            catch (SqlException ex)
+            {
+                throw;
+>>>>>>> eden-save-news
             }
             finally
             {
