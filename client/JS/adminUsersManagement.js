@@ -4,14 +4,14 @@ function isDevEnv() {
     return location.host.includes("localhost");
 }
 
-const port = 7110;
+const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 const baseUrl = `${baseApiUrl}/api/Users`;
 
 
-// ========== LOAD USERS FROM SERVER ==========
+//LOAD USERS FROM SERVER
 function loadUsers() {
     ajaxCall("GET", baseUrl, null,
         res => {
@@ -25,7 +25,7 @@ function loadUsers() {
     );
 }
 
-// ========== UPDATE USER ACTIVE STATUS ==========
+//UPDATE USER ACTIVE STATUS
 function toggleUserActive(userId) {
     const user = users.find(u => u.id == userId);
     if (!user) return;
@@ -49,7 +49,7 @@ function toggleUserActive(userId) {
 }
 
 
-// ========== RESET TO DEFAULT USERS ==========
+//RESET TO DEFAULT USERS
 function handleResetToDefault() {
     ajaxCall("POST", `${baseUrl}/reset-to-default`, null,
         res => {
@@ -63,7 +63,7 @@ function handleResetToDefault() {
     );
 }
 
-// ========== CLEAR ALL USERS ==========
+//CLEAR ALL USERS 
 function handleClearAllData() {
     ajaxCall("DELETE", `${baseUrl}/delete-all`, null,
         res => {
@@ -77,7 +77,7 @@ function handleClearAllData() {
     );
 }
 
-// ========== RENDER TABLE ==========
+//RENDER TABLE 
 function renderUsers() {
     const container = document.getElementById('userTableContainer');
     if (!container) return console.error('User table container not found!');
@@ -124,7 +124,7 @@ function renderUsers() {
     table.addEventListener('click', handleTableClick);
 }
 
-// ========== EVENT: BUTTON CLICK ==========
+//EVENT: BUTTON CLICK 
 function handleTableClick(event) {
     if (event.target.tagName === 'BUTTON' && event.target.dataset.userId) {
         toggleUserActive(event.target.dataset.userId);

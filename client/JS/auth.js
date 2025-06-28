@@ -4,10 +4,20 @@
 }
 
 function requireLogin() {
+    const user = getCurrentUser();
+
+    // אם לא מחובר ומנסה להיכנס לעמוד אחר מ-login/index → מפנה ל-login
     if (!location.pathname.endsWith("index.html") &&
         !location.pathname.endsWith("login.html") &&
-        !getCurrentUser()) {
+        !user) {
         location.href = "login.html";
+        return;
+    }
+
+    // אם מחובר כ-admin ונמצא לא בעמוד adminIndex → מפנה לשם
+    if (user && user.name?.toLowerCase() === "admin" &&
+        !location.pathname.endsWith("adminIndex.html")) {
+        location.href = "adminIndex.html";
     }
 }
 
@@ -21,7 +31,7 @@ function updateAuthButton() {
     const btn = document.getElementById("authBtn");
     const user = getCurrentUser();
 
-    if (!btn) return; 
+    if (!btn) return;
 
     if (user) {
         btn.textContent = `🚪 Logout (${user.name})`;

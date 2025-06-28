@@ -8,19 +8,23 @@ namespace server.DAL
 {
     public class NewsService
     {
-        private readonly HttpClient _httpClient;  //object for HTTP calls like GET, POST from web
+        private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
         public NewsService()
         {
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "MyNewsApp"); // for non annonumus call
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "MyNewsApp");
 
             _apiKey = "bdbd65f8143048ee8f2dcc1592903813";
         }
 
         public async Task<List<Article>> GetTopHeadlinesAsync(string country = "us", string? categories = null)
         {
+            // 🔄 Count this as a real API fetch (refresh/page load)
+            DBservicesNews db = new DBservicesNews();
+            db.IncrementApiFetchCounter();
+
             if (string.IsNullOrWhiteSpace(categories))
             {
                 return await GetTopHeadlinesForCategoryAsync(country, null);
@@ -29,7 +33,7 @@ namespace server.DAL
             var categoriesList = categories.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                                            .Select(c => c.ToLowerInvariant())
                                            .Distinct()
-                                           .ToList();  //split string int list of categories
+                                           .ToList();
 
             var allArticles = new List<Article>();
 
@@ -46,7 +50,6 @@ namespace server.DAL
                 }
             }
 
-            //drop duplicate articles
             var distinctArticles = allArticles
                 .GroupBy(a => a.Url)
                 .Select(g => g.First())
@@ -81,7 +84,6 @@ namespace server.DAL
             return result?.Articles ?? new List<Article>();
         }
 
-
         public class NewsApiResponse
         {
             public string? Status { get; set; }
@@ -89,4 +91,4 @@ namespace server.DAL
             public List<Article>? Articles { get; set; }
         }
     }
-} 
+}

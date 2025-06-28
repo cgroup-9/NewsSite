@@ -1,4 +1,6 @@
-﻿namespace server.Models
+﻿using server.DAL;
+
+namespace server.Models
 {
     public class Article
     {
@@ -11,8 +13,8 @@
         public string PublishedAt { get; set; }
         public string? Content { get; set; }
         public string? Category { get; set; }
-        public Article() { }
 
+        public Article() { }
         public Article(Source? source, string? author, string title, string? description, string url, string? urlToImage, string publishedAt, string? content)
         {
             Source = source;
@@ -24,5 +26,6 @@
             PublishedAt = publishedAt;
             Content = content;
         }
+
     }
 }
