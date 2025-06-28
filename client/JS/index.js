@@ -49,10 +49,9 @@ $(document).ready(() => {
         }
 
         for (let a of pageArticles) {
-            //const articleData = JSON.stringify(a).replace(/'/g, "&apos");
 
             const cardHtml = `
-            <div class="articleCard" data-article='${a.url}'>
+            <div class="articleCard" data-article='${JSON.stringify(a).replace(/'/g, "&apos;")}'>
                  <h2>${a.title}</h2>
                  <img src="${a.urlToImage || '../Img/logo.png'}" alt="Image" class="${a.urlToImage ? 'articleImage' : 'articleImage defaultImage'}"  />
                  <p><strong>Author:</strong> ${a.author || 'Unknown'}</p>
@@ -92,13 +91,8 @@ $(document).ready(() => {
         container.html(html);
     }
 
-    function saveArticle(userId, articleUrl) {
+    function saveArticle(savedArticle) {
         url = `${baseUrl}/Save-Article`;
-
-        const savedArticle = {
-            userId,
-            articleUrl
-        };
 
         ajaxCall("POST", url, JSON.stringify(savedArticle),
             res => {
@@ -133,9 +127,21 @@ $(document).ready(() => {
 
     $(document).on("click", ".saveArticleBtn", function () {
         const user = JSON.parse(sessionStorage.getItem('currentUser'));
-        const articleUrl = $(this).closest('.articleCard').data('article');
-        saveArticle(user.id, articleUrl);
-        })
+        const articleDataStr = $(this).closest('.articleCard').attr('data-article').replace(/&apos;/g, "'");
+        const article = JSON.parse(articleDataStr);
+        const savedArticle = {
+            UserId: user.id,
+            ArticleUrl: article.url,
+            Title: article.title,
+            Description: article.description,
+            UrlToImage: article.urlToImage,
+            Author: article.author,
+            PublishedAt: article.publishedAt,
+            Content: article.content,
+            Category: article.category || ""
+        };
+        saveArticle(savedArticle);
+    })
 
 
 

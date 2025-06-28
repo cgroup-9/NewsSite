@@ -3,6 +3,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using server.Models;
+using server.DAL;
+
 
 namespace server.DAL
 {
@@ -22,7 +24,7 @@ namespace server.DAL
         public async Task<List<Article>> GetTopHeadlinesAsync(string country = "us", string? categories = null)
         {
             // 🔄 Count this as a real API fetch (refresh/page load)
-            DBservicesNews db = new DBservicesNews();
+            DBservicesArticles db = new DBservicesArticles();
             db.IncrementApiFetchCounter();
 
             if (string.IsNullOrWhiteSpace(categories))

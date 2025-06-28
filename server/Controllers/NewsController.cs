@@ -44,10 +44,19 @@ namespace server.Controllers
         }
 
         // GET api/<NewsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("Saved/{userId}")]
+        public IActionResult Get(int userId)
         {
-            return "value";
+            DBservicesArticles db = new DBservicesArticles();
+            try
+            {
+                List<SavedArticle> result = db.GetSavedArticles(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error: {ex.Message}");
+            }
         }
 
         // POST api/<NewsController>

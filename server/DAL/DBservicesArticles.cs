@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 ﻿using System.Data.SqlClient;
 using System.Data;
-=======
 ﻿using System;
-using System.Data;
-using System.Data.SqlClient;
 using System.Xml.Linq;
 using server.Models;
->>>>>>> eden-save-news
 
 namespace server.DAL
 {
@@ -45,12 +40,25 @@ namespace server.DAL
             return cmd;
         }
 
-<<<<<<< HEAD
         public void IncrementApiFetchCounter()
         {
             SqlConnection con = connect("myProjDB");
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_IncrementApiFetchCounter", con, null);
-=======
+
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("❌ Failed to update apiFetchCounter: " + ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
         public int saveArticle(SavedArticle save)
         {
             SqlConnection con;
@@ -69,6 +77,13 @@ namespace server.DAL
             {
                 { "@userId", save.UserId },
                 { "@articleUrl", save.ArticleUrl },
+                { "@title", save.Title },
+                { "@description", save.Description },
+                { "@urlToImage", save.UrlToImage },
+                { "@author", save.Author },
+                { "@publishedAt", save.PublishedAt },
+                { "@content", save.Content },
+                { "@category", save.Category }
             };
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_SaveArticle_FP", con, paramDic);
@@ -76,29 +91,70 @@ namespace server.DAL
             SqlParameter returnParameter = new SqlParameter();
             returnParameter.Direction = ParameterDirection.ReturnValue;
             cmd.Parameters.Add(returnParameter);
->>>>>>> eden-save-news
 
             try
             {
                 cmd.ExecuteNonQuery();
-<<<<<<< HEAD
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("❌ Failed to update apiFetchCounter: " + ex.Message);
-=======
-                int result = (int)returnParameter.Value; 
+                int result = (int)returnParameter.Value;
                 return result;
             }
             catch (SqlException ex)
             {
                 throw;
->>>>>>> eden-save-news
             }
             finally
             {
                 con.Close();
             }
         }
+
+        public List<SavedArticle> GetSavedArticles(int userId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            Dictionary<string, object> paramDic = new Dictionary<string, object>
+            {
+                { "@userId", userId },
+            };
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSavedArticles_FP", con, paramDic);
+
+            List<SavedArticle> articles = new List<SavedArticle>();
+
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            while(reader.Read())
+            {
+                SavedArticle s = new SavedArticle
+                {
+                    UserId = Convert.ToInt32(reader["userId"]),
+                    ArticleUrl = reader["articleUrl"].ToString(),
+                    Title = reader["title"].ToString(),
+                    Description = reader["description"].ToString(),
+                    UrlToImage = reader["urlToImage"].ToString(),
+                    Author = reader["author"].ToString(),
+                    PublishedAt = reader["publishedAt"].ToString(),
+                    Content = reader["content"].ToString(),
+                    Category = reader["category"].ToString()
+                };
+                articles.Add(s);
+            }
+
+            con.Close();
+            return articles;
+
+        }
     }
 }
+
+
