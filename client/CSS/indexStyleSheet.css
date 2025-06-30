@@ -10,6 +10,14 @@ body {
     color: #333;
 }
 
+.fullRowTitle {
+    margin-left: 30px; /* או margin-right: אם זה אתר ימין לשמאל */
+    margin-top: 30px;
+    margin-bottom: 0;
+    font-size: 2.2rem;
+}
+
+
 
 /* ------------------ */
 /*       NAVBAR       */
@@ -52,7 +60,8 @@ nav {
 /* ------------------ */
 /*     MAIN CONTENT   */
 /* ------------------ */
-#newsContainer {
+#newsContainer,
+#myArticleContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 30px;

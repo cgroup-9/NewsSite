@@ -9,6 +9,8 @@ const baseApiUrl = isDevEnv()
 const baseUrl = `${baseApiUrl}/api/News`;
 
 $(document).ready(() => {
+
+
     loadNews(); //render latest articles  on load without categories
 
     let articles = [];     
@@ -29,7 +31,10 @@ $(document).ready(() => {
                 console.log("Total pages:", totalPages);
 
                 renderArticles(currentPage);  
-                renderPagination();
+                renderPagination(currentPage, totalPages, function (page) {
+                    currentPage = page;
+                    renderArticles(currentPage);
+                });
             },
             err => alert("❌ Failed to load articles: " + (err.responseText || err.statusText))
         );
@@ -64,33 +69,8 @@ $(document).ready(() => {
                  
             </div>`;
             container.append(cardHtml);
-
         }
     }
-    function renderPagination() {
-        const container = $("#paginationContainer");
-        container.empty();
-
-        if (isNaN(totalPages) || totalPages <= 1) return;  //if less than 2 pages- no need
-
-        let html = `<div id="pagination">`;
-
-        if (currentPage > 1) {
-            html += `<button class="paginationBtn" data-page="${currentPage - 1}">« הקודם</button>`;
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            html += `<button class="paginationBtn" data-page="${i}" ${i === currentPage ? "disabled" : ""}>${i}</button>`;
-        }
-
-        if (currentPage < totalPages) {
-            html += `<button class="paginationBtn" data-page="${currentPage + 1}">הבא »</button>`;
-        }
-
-        html += `</div>`;
-        container.html(html);
-    }
-
     function saveArticle(savedArticle) {
         url = `${baseUrl}/Save-Article`;
 
@@ -104,16 +84,6 @@ $(document).ready(() => {
             }
         );
     }
-
-    $(document).on("click", ".paginationBtn", function () {
-        const page = $(this).data("page");   //which page was clicked
-
-        if (page && page !== currentPage) {
-            currentPage = page; 
-            renderArticles(currentPage);
-            renderPagination();
-        }
-    })
 
     $("#filterBtn").on("click", function () {
         const categories = $(".categoryCheckbox:checked").map(function () { return $(this).val(); }).get();
@@ -132,12 +102,12 @@ $(document).ready(() => {
         const savedArticle = {
             UserId: user.id,
             ArticleUrl: article.url,
-            Title: article.title,
-            Description: article.description,
-            UrlToImage: article.urlToImage,
-            Author: article.author,
-            PublishedAt: article.publishedAt,
-            Content: article.content,
+            Title: article.title || "",
+            Description: article.description || "",
+            UrlToImage: article.urlToImage || "",
+            Author: article.author || "",
+            PublishedAt: article.publishedAt || "",
+            Content: article.content || "",
             Category: article.category || ""
         };
         saveArticle(savedArticle);

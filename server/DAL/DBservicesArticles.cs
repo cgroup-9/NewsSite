@@ -76,14 +76,14 @@ namespace server.DAL
             Dictionary<string, object> paramDic = new Dictionary<string, object>
             {
                 { "@userId", save.UserId },
-                { "@articleUrl", save.ArticleUrl },
-                { "@title", save.Title },
-                { "@description", save.Description },
-                { "@urlToImage", save.UrlToImage },
-                { "@author", save.Author },
-                { "@publishedAt", save.PublishedAt },
-                { "@content", save.Content },
-                { "@category", save.Category }
+                { "@articleUrl", save.ArticleUrl ?? ""},
+                { "@title", save.Title ?? ""},
+                { "@description", save.Description ?? ""},
+                { "@urlToImage", save.UrlToImage ?? ""},
+                { "@author", save.Author ?? ""},
+                { "@publishedAt", save.PublishedAt ?? ""},
+                { "@content", save.Content ?? ""},
+                { "@category", save.Category ?? ""}
             };
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_SaveArticle_FP", con, paramDic);
@@ -107,6 +107,9 @@ namespace server.DAL
                 con.Close();
             }
         }
+
+        private string SafeGetString(SqlDataReader r, string col) =>
+            r[col] == DBNull.Value ? "" : r[col].ToString();
 
         public List<SavedArticle> GetSavedArticles(int userId)
         {
@@ -138,14 +141,14 @@ namespace server.DAL
                 SavedArticle s = new SavedArticle
                 {
                     UserId = Convert.ToInt32(reader["userId"]),
-                    ArticleUrl = reader["articleUrl"].ToString(),
-                    Title = reader["title"].ToString(),
-                    Description = reader["description"].ToString(),
-                    UrlToImage = reader["urlToImage"].ToString(),
-                    Author = reader["author"].ToString(),
-                    PublishedAt = reader["publishedAt"].ToString(),
-                    Content = reader["content"].ToString(),
-                    Category = reader["category"].ToString()
+                    ArticleUrl = SafeGetString(reader, "articleUrl"),
+                    Title = SafeGetString(reader, "title"),
+                    Description = SafeGetString(reader, "description"),
+                    UrlToImage = SafeGetString(reader, "urlToImage"),
+                    Author = SafeGetString(reader, "author"),
+                    PublishedAt = SafeGetString(reader, "publishedAt"),
+                    Content = SafeGetString(reader, "content"),
+                    Category = SafeGetString(reader, "category")
                 };
                 articles.Add(s);
             }
