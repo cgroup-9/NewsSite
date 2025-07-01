@@ -1,8 +1,6 @@
-﻿using server.DAL;
-
-namespace server.Models
+﻿namespace server.Models
 {
-    public class SavedArticle
+    public class SaveArticleRequest
     {
         public int UserId { get; set; }
         public string ArticleUrl { get; set; }
@@ -14,9 +12,11 @@ namespace server.Models
         public string? Content { get; set; }
         public string? Category { get; set; }
 
-        public SavedArticle() { }
+        public SaveArticleRequest() { }
 
-        public SavedArticle(int userId, string articleUrl, string title, string description, string urlToImage, string author, string publishedAt, string content, string category)
+        public SaveArticleRequest(int userId, string articleUrl, string? title, string? description,
+                            string? urlToImage, string? author, string? publishedAt,
+                            string? content, string? category)
         {
             UserId = userId;
             ArticleUrl = articleUrl;

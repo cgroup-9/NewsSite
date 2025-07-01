@@ -50,7 +50,7 @@ namespace server.Controllers
             DBservicesArticles db = new DBservicesArticles();
             try
             {
-                List<SavedArticle> result = db.GetSavedArticles(userId);
+                List<SaveArticleRequest> result = db.GetSavedArticles(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace server.Controllers
 
         // POST api/<NewsController>
         [HttpPost("Save-Article")]
-        public IActionResult Post([FromBody] SavedArticle articleToSave)
+        public IActionResult Post([FromBody] SaveArticleRequest articleToSave)
         {
             DBservicesArticles db = new DBservicesArticles();
             int result = db.saveArticle(articleToSave);

@@ -59,7 +59,7 @@ namespace server.DAL
             }
         }
 
-        public int saveArticle(SavedArticle save)
+        public int saveArticle(SaveArticleRequest save)
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -111,7 +111,7 @@ namespace server.DAL
         private string SafeGetString(SqlDataReader r, string col) =>
             r[col] == DBNull.Value ? "" : r[col].ToString();
 
-        public List<SavedArticle> GetSavedArticles(int userId)
+        public List<SaveArticleRequest> GetSavedArticles(int userId)
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -132,13 +132,13 @@ namespace server.DAL
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSavedArticles_FP", con, paramDic);
 
-            List<SavedArticle> articles = new List<SavedArticle>();
+            List<SaveArticleRequest> articles = new List<SaveArticleRequest>();
 
             SqlDataReader reader = cmd.ExecuteReader();
 
             while(reader.Read())
             {
-                SavedArticle s = new SavedArticle
+                SaveArticleRequest s = new SaveArticleRequest
                 {
                     UserId = Convert.ToInt32(reader["userId"]),
                     ArticleUrl = SafeGetString(reader, "articleUrl"),

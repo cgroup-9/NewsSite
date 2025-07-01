@@ -1,4 +1,5 @@
-﻿body {
+﻿/* ========== General Styles ========== */
+body {
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
     margin: 0;
@@ -6,9 +7,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh; 
+    height: 100vh;
 }
 
+
+/* ========== Login Container ========== */
 #loginContainer {
     background-color: white;
     padding: 40px 30px;
@@ -18,10 +21,17 @@
     text-align: center;
 }
 
+
+/* ========== Headings ========== */
 h2 {
     margin-bottom: 20px;
+    font-size: 1.6rem;
+    color: #004080;
+    font-weight: 500;
 }
 
+
+/* ========== Login Form ========== */
 form {
     display: flex;
     flex-direction: column;
@@ -38,6 +48,8 @@ input[type="password"] {
     margin-bottom: 15px;
 }
 
+
+/* ========== Submit Button ========== */
 button {
     background-color: #2980b9;
     color: white;
@@ -53,6 +65,8 @@ button {
         background-color: #3498db;
     }
 
+
+/* ========== Links ========== */
 a {
     display: block;
     margin-top: 15px;
@@ -64,6 +78,8 @@ a {
         text-decoration: underline;
     }
 
+
+/* ========== Responsive Design ========== */
 @media (max-width: 500px) {
     #loginContainer {
         width: 90%;
