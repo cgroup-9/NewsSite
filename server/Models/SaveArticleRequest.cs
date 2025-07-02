@@ -1,4 +1,6 @@
-﻿namespace server.Models
+﻿using server.DAL;
+
+namespace server.Models
 {
     public class SaveArticleRequest
     {
@@ -12,11 +14,13 @@
         public string? Content { get; set; }
         public string? Category { get; set; }
 
+        // Default constructor
         public SaveArticleRequest() { }
 
+        // Full constructor
         public SaveArticleRequest(int userId, string articleUrl, string? title, string? description,
-                            string? urlToImage, string? author, string? publishedAt,
-                            string? content, string? category)
+                                  string? urlToImage, string? author, string? publishedAt,
+                                  string? content, string? category)
         {
             UserId = userId;
             ArticleUrl = articleUrl;
@@ -28,5 +32,27 @@
             Content = content;
             Category = category;
         }
+
+        // Saves this article to the database for the current user
+        public int Save()
+        {
+            DBservicesSavedArticles db = new DBservicesSavedArticles();
+            return db.SaveArticle(this);
+        }
+
+        // Deletes this article from the user's saved list
+        public static int Delete(int userId, string articleUrl)
+        {
+            DBservicesSavedArticles db = new DBservicesSavedArticles();
+            return db.DeleteSavedArticle(userId, articleUrl);
+        }
+
+        // Retrieves all articles saved by a specific user
+        public static List<SaveArticleRequest> GetSavedArticles(int userId, int page, int pageSize)
+        {
+            DBservicesSavedArticles db = new DBservicesSavedArticles();
+            return db.GetSavedArticles(userId, page, pageSize);
+        }
+
     }
 }

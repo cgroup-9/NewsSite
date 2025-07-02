@@ -2,13 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>My Articles</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
-    <link href="../CSS/indexStyleSheet.css" rel="stylesheet" />
-
-    <script src="../JS/Pagination.js"></script>
+    <link href="../CSS/myArticleStyle.css" rel="stylesheet" />
+    <script src="../JS/pagination.js"></script>
     <script src="../JS/ajaxCall.js"></script>
     <script src="../JS/auth.js"></script>
 </head>
@@ -21,14 +20,22 @@
         <button id="authBtn" class="navBtn">🔐 Login</button>
     </nav>
 
-    <script src="../JS/MyArticle.js"></script>
     <h2 class="fullRowTitle">My Articles</h2>
 
-    <div id="myArticleContainer">
-
-    </div>
-
+    <div id="myArticleContainer"></div>
     <div id="paginationContainer"></div>
 
+    <!-- Modal for sharing an article -->
+    <div id="shareModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>📤 Share Article</h3>
+            <textarea id="shareComment" placeholder="Write your comment here..."></textarea>
+            <br>
+            <button id="confirmShareBtn">Share</button>
+        </div>
+    </div>
+
+    <script src="../JS/myArticle.js"></script>
 </body>
 </html>

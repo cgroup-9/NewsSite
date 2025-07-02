@@ -10,12 +10,9 @@ const baseUrl = `${baseApiUrl}/api/News`;
 
 $(document).ready(() => {
 
-    loadNews(); //render latest articles on load without categories
+    loadNews(); // Load all articles on page load
 
     let articles = [];
-    let currentPage = 1;
-    const pageSize = 20;   //num of articles in page
-    let totalPages = 1;
 
     function loadNews(category = "") {
         const url = category
@@ -25,18 +22,11 @@ $(document).ready(() => {
         ajaxCall("GET", url, null,
             res => {
                 articles = res;
-                totalPages = Math.ceil(articles.length / pageSize);
-                currentPage = 1;
 
-                // extract unique categories and render them dynamically
                 const allCategories = [...new Set(articles.map(a => a.category).filter(Boolean))];
                 renderCategoryFilters(allCategories);
 
-                renderArticles(currentPage);
-                renderPagination(currentPage, totalPages, function (page) {
-                    currentPage = page;
-                    renderArticles(currentPage);
-                });
+                renderArticles(); // No page needed
             },
             err => alert("❌ Failed to load articles: " + (err.responseText || err.statusText))
         );
@@ -52,36 +42,30 @@ $(document).ready(() => {
 
         // All articles option
         filterDiv.append(`<div class="categoryItem">
-        <label><input type="checkbox" class="categoryCheckbox" value=""> All articles</label>
-    </div>`);
+            <label><input type="checkbox" class="categoryCheckbox" value=""> All articles</label>
+        </div>`);
 
         staticCategories.forEach(cat => {
             const label = cat.charAt(0).toUpperCase() + cat.slice(1);
             filterDiv.append(`
-            <div class="categoryItem">
-                <label><input type="checkbox" class="categoryCheckbox" value="${cat}"> ${label}</label>
-            </div>`);
+                <div class="categoryItem">
+                    <label><input type="checkbox" class="categoryCheckbox" value="${cat}"> ${label}</label>
+                </div>`);
         });
 
-        // Add the filter button
         filterDiv.append(`<div><button id="filterBtn" class="filterBtn">Filter by Tag</button></div>`);
     }
 
-
-    function renderArticles(page) {
+    function renderArticles() {
         const container = $("#newsContainer");
         container.empty();
 
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = Math.min(startIndex + pageSize, articles.length);
-        const pageArticles = articles.slice(startIndex, endIndex);
-
-        if (pageArticles.length === 0) {
+        if (articles.length === 0) {
             container.html("<p>No articles found.<p>");
             return;
         }
 
-        for (let a of pageArticles) {
+        for (let a of articles) {
             const cardHtml = `
             <div class="articleCard" data-article='${JSON.stringify(a).replace(/'/g, "&apos;")}'>
                  <h2>${a.title}</h2>
@@ -121,19 +105,13 @@ $(document).ready(() => {
         }
     });
 
-    // Get the article data stored in the 'data-article' attribute of the closest .articleCard element.
-    // This data is a JSON string that may contain encoded apostrophes (&apos;), so we replace them with regular single quotes (')
-    // to make sure JSON.parse works correctly.
     $(document).on("click", ".saveArticleBtn", function () {
         const user = getCurrentUser();
-
-        // If the user is not logged in, show an alert and stop
         if (!user) {
             alert("❌ You must be logged in to save an article.");
             return;
         }
 
-        // Get article data from the data-article attribute
         const articleDataStr = $(this).closest('.articleCard').attr('data-article').replace(/&apos;/g, "'");
         const article = JSON.parse(articleDataStr);
 
@@ -151,39 +129,5 @@ $(document).ready(() => {
 
         saveArticle(savedArticle);
     });
-
-
-
-   
-    //function openRentModal(movieId, priceToRent) {
-    //    const modal = $("#rentModal");
-    //    const today = new Date().toISOString().split("T")[0];
-
-    //    modal.html(`
-    //    <div class="modal-content">
-    //        <span class="close">&times;</span>
-    //        <h3>📅 Rent Movie</h3>
-    //        <p>Choose rental dates:</p>
-    //        <input type="date" id="rentStart" value="${today}"><br><br>
-    //        <input type="date" id="rentEnd"><br><br>
-    //        <p id="priceSummary" style="font-weight:bold;"></p>
-    //        <button id="confirmRentBtn">Confirm Rent</button>
-    //    </div>
-    //`);
-
-    //    modal.show();
-
-    //    $(".close").click(() => modal.hide());
-
-    
-
-    //// דפדוף בין עמודים
-    //$(document).on("click", ".paginationBtn", function () {
-    //    const page = $(this).data("page");
-    //    if (page && page !== currentPage) {
-    //        loadPagedMovies(page);
-    //    }
-    //});
-
 
 });
