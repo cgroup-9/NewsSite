@@ -6,11 +6,11 @@ const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
-const baseUrl = `${baseApiUrl}/api/News`;
+const baseUrl = `${baseApiUrl}/api/Articles`;
 
 $(document).ready(() => {
-
     loadNews(); // Load all articles on page load
+    renderCategoryFilters(); // Render category checkboxes
 
     let articles = [];
 
@@ -22,11 +22,7 @@ $(document).ready(() => {
         ajaxCall("GET", url, null,
             res => {
                 articles = res;
-
-                const allCategories = [...new Set(articles.map(a => a.category).filter(Boolean))];
-                renderCategoryFilters(allCategories);
-
-                renderArticles(); // No page needed
+                renderArticles();
             },
             err => alert("❌ Failed to load articles: " + (err.responseText || err.statusText))
         );
@@ -42,9 +38,10 @@ $(document).ready(() => {
 
         // All articles option
         filterDiv.append(`<div class="categoryItem">
-            <label><input type="checkbox" class="categoryCheckbox" value=""> All articles</label>
+            <label><input type="checkbox" class="categoryCheckbox" value=""> All Articles</label>
         </div>`);
 
+        // Add each category
         staticCategories.forEach(cat => {
             const label = cat.charAt(0).toUpperCase() + cat.slice(1);
             filterDiv.append(`
@@ -53,6 +50,7 @@ $(document).ready(() => {
                 </div>`);
         });
 
+        // Add filter button
         filterDiv.append(`<div><button id="filterBtn" class="filterBtn">Filter by Tag</button></div>`);
     }
 
@@ -69,7 +67,7 @@ $(document).ready(() => {
             const cardHtml = `
             <div class="articleCard" data-article='${JSON.stringify(a).replace(/'/g, "&apos;")}'>
                  <h2>${a.title}</h2>
-                 <img src="${a.urlToImage || '../Img/logo.png'}" alt="Image" class="${a.urlToImage ? 'articleImage' : 'articleImage defaultImage'}"  />
+                 <img src="${a.urlToImage || '../Img/logo.png'}" alt="Image" class="${a.urlToImage ? 'articleImage' : 'articleImage defaultImage'}" />
                  <p><strong>Author:</strong> ${a.author || 'Unknown'}</p>
                  <p><strong>Published At:</strong> ${new Date(a.publishedAt).toLocaleString()}</p>
                  <p class="description">${a.description || ''}</p>
@@ -83,7 +81,8 @@ $(document).ready(() => {
     }
 
     function saveArticle(savedArticle) {
-        url = `${baseUrl}/Save-Article`;
+        const url = `${baseApiUrl}/api/SavedArticle`;
+
 
         ajaxCall("POST", url, JSON.stringify(savedArticle),
             res => {
@@ -96,7 +95,10 @@ $(document).ready(() => {
     }
 
     $(document).on("click", "#filterBtn", function () {
-        const categories = $(".categoryCheckbox:checked").map(function () { return $(this).val(); }).get();
+        const categories = $(".categoryCheckbox:checked").map(function () {
+            return $(this).val();
+        }).get();
+
         if (categories.includes("") || categories.length === 0)
             loadNews();
         else {
@@ -129,5 +131,4 @@ $(document).ready(() => {
 
         saveArticle(savedArticle);
     });
-
 });

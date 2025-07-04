@@ -1,19 +1,56 @@
-﻿/* === MyArticle Page Styles === */
-
+﻿/* === General Styles === */
 body {
-    background: #f5f8fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
 }
 
-/* Title */
 .fullRowTitle {
     margin-left: 30px;
     margin-top: 30px;
-    font-size: 2.4rem;
-    color: #003366;
-    font-weight: 700;
+    margin-bottom: 0;
+    font-size: 2.2rem;
 }
 
-/* Article container */
+/* === Navbar === */
+
+nav {
+    background-color: #004080;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+    nav a, .navBtn {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+        nav a:hover, .navBtn:hover {
+            text-decoration: underline;
+        }
+
+#authBtn {
+    background-color: #007BFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    #authBtn:hover {
+        background-color: #0056b3;
+    }
+
+/* === Article Cards === */
+
 #myArticleContainer {
     display: flex;
     flex-wrap: wrap;
@@ -22,25 +59,23 @@ body {
     padding: 30px;
 }
 
-/* Saved Article Card */
 .articleCard {
-    background: #ffffff;
+    background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     width: 45%;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    transition: transform 0.2s ease-in-out;
+    gap: 10px;
+    transition: transform 0.3s ease-in-out;
 }
 
     .articleCard:hover {
         transform: scale(1.02);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     }
 
-/* Article image */
 .articleImage {
     width: 100%;
     height: auto;
@@ -49,130 +84,171 @@ body {
 }
 
 .defaultImage {
-    max-height: 250px;
+    max-height: 300px;
+    width: 100%;
     object-fit: contain;
+    display: block;
     margin: 0 auto;
 }
 
-/* Remove button */
-.removeArticleBtn {
-    background-color: #c62828;
-    color: white;
-    border: none;
+.articleCard h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.articleCard p {
+    margin: 5px 0;
+}
+
+.articleCard a {
+    text-decoration: none;
+    color: #004080;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+    .articleCard a:hover {
+        text-decoration: underline;
+    }
+
+/* === Buttons in Card === */
+
+.removeArticleBtn,
+.shareArticleBtn {
+    margin-top: 10px;
     padding: 10px 16px;
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
+    border: none;
     transition: background-color 0.3s ease;
 }
 
+.removeArticleBtn {
+    background-color: #cc0000;
+    color: white;
+}
+
     .removeArticleBtn:hover {
-        background-color: #a61b1b;
+        background-color: #a60000;
     }
 
-/* Share button */
 .shareArticleBtn {
     background-color: #007BFF;
     color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
     .shareArticleBtn:hover {
         background-color: #0056b3;
     }
 
-/* Pagination */
+/* === Pagination === */
+
 #paginationContainer {
     text-align: center;
-    padding: 20px 0;
+    padding: 20px;
 }
 
-    #paginationContainer .paginationBtn {
-        margin: 4px;
-        padding: 8px 14px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        background: white;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
+.paginationBtn {
+    margin: 4px;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        #paginationContainer .paginationBtn:hover {
-            background-color: #e0e0e0;
-        }
-
-    #paginationContainer .activePage {
+    .paginationBtn.activePage {
         background-color: #004080;
         color: white;
-        border-color: #004080;
+        cursor: default;
     }
 
-/* === Share Modal === */
+    .paginationBtn:disabled {
+        background: #ddd;
+        color: #777;
+    }
+
+/* === Modal === */
+
 .modal {
     position: fixed;
-    top: 0;
+    z-index: 999;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
 }
 
 .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 12px;
     width: 90%;
-    max-width: 400px;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     position: relative;
 }
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    resize: none;
-}
-
-/* Modal share button */
-#confirmShareBtn {
-    background-color: #004080;
-    color: white;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
-}
-
-    #confirmShareBtn:hover {
-        background-color: #0066cc;
+    .modal-content h3 {
+        margin-top: 0;
+        color: #004080;
     }
 
-/* Responsive */
+    .modal-content textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        resize: vertical;
+    }
+
+    .modal-content button {
+        background-color: #004080;
+        color: white;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 15px;
+    }
+
+        .modal-content button:hover {
+            background-color: #007BFF;
+        }
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+    .close:hover {
+        color: #000;
+    }
+
+/* === Responsive === */
+
 @media screen and (max-width: 768px) {
     .articleCard {
         width: 90%;
+    }
+
+    .modal-content {
+        margin-top: 25%;
+        padding: 20px;
     }
 }

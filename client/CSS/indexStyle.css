@@ -135,6 +135,51 @@ nav {
     .saveArticleBtn:hover {
         background-color: #039be5;
     }
+/* === Category Filter === */
+
+#categoryFilter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 30px;
+    padding: 10px 0;
+}
+
+.categoryItem {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .categoryItem:hover {
+        background-color: #f0f0f0;
+    }
+
+    .categoryItem input[type="checkbox"] {
+        margin-right: 8px;
+        transform: scale(1.2);
+    }
+
+/* Filter button inside category filter */
+#filterBtn {
+    background-color: #004080;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    #filterBtn:hover {
+        background-color: #007BFF;
+    }
 
 
 /* === Responsive === */

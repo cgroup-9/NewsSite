@@ -6,7 +6,7 @@ const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
-const baseUrl = `${baseApiUrl}/api/News`;
+const baseUrl = `${baseApiUrl}/api/SavedArticle`;
 
 let articles = [];
 let currentPage = 1;
@@ -28,7 +28,8 @@ $(document).ready(() => {
     // We load one page at a time and show a "Next" button only if the current page is full.
 
     function loadArticles() {
-        ajaxCall("GET", `${baseUrl}/Saved/${currentUser.id}?page=${currentPage}&pageSize=${pageSize}`, null,
+        ajaxCall("GET", `${baseUrl}/${currentUser.id}?page=${currentPage}&pageSize=${pageSize}`, null,
+
             res => {
                 articles = res;
                 renderArticles();
@@ -169,7 +170,7 @@ $(document).ready(() => {
             comment: comment
         };
 
-        ajaxCall("POST", `${baseApiUrl}/api/sharedarticle`, JSON.stringify(shareData),
+        ajaxCall("POST", `${baseApiUrl}/api/sharedArticle`, JSON.stringify(shareData),
             res => {
                 alert("✅ Article shared successfully!");
                 $("#shareModal").hide();
