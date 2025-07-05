@@ -22,7 +22,7 @@ namespace server.DAL
         // Builds a SqlCommand for a stored procedure with optional parameters
         private SqlCommand CreateCommandWithStoredProcedureGeneral(string spName, SqlConnection con, Dictionary<string, object>? paramDic)
         {
-            SqlCommand cmd = new SqlCommand()
+            SqlCommand cmd = new SqlCommand
             {
                 Connection = con,
                 CommandText = spName,
@@ -42,7 +42,7 @@ namespace server.DAL
         }
 
         // Inserts a shared article using SP_ShareArticle_FP
-        public int ShareArticle(SharedArticle sharedArticle)
+        public int ShareArticle(SharedArticleRequest sharedArticle)
         {
             using SqlConnection con = connect("myProjDB");
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_ShareArticle_FP", con, new Dictionary<string, object>
@@ -62,21 +62,31 @@ namespace server.DAL
             return (int)returnParameter.Value;
         }
 
-        // Gets all shared articles using SP_GetSharedArticles_FP
-        public List<SharedArticle> GetSharedArticles()
+        // Retrieves all shared articles (optionally filters by hidden user IDs)
+        public List<SharedArticleIndex> GetSharedArticles(string? hiddenUserIds = null)
         {
             using SqlConnection con = connect("myProjDB");
-            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSharedArticles_FP", con, null);
 
-            List<SharedArticle> sharedList = new();
+            var paramDic = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(hiddenUserIds))
+                paramDic.Add("@HiddenUserIds", hiddenUserIds);
+
+            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllSharedArticles_FP", con, paramDic.Count > 0 ? paramDic : null);
+
+            List<SharedArticleIndex> sharedList = new();
 
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                SharedArticle sa = new SharedArticle
+                SharedArticleIndex sa = new SharedArticleIndex
                 {
+                    SharedId = Convert.ToInt32(reader["SharedId"]),
                     UserId = Convert.ToInt32(reader["UserId"]),
+                    UserName = reader["UserName"].ToString(),
                     ArticleUrl = reader["ArticleUrl"].ToString(),
+                    Title = reader["Title"].ToString(),
+                    UrlToImage = reader["UrlToImage"].ToString(),
+                    Author = reader["Author"].ToString(),
                     Comment = reader["Comment"].ToString()
                 };
                 sharedList.Add(sa);
@@ -84,5 +94,26 @@ namespace server.DAL
 
             return sharedList;
         }
+
+        // Reports a shared article using SP_ReportSharedArticle_FP
+        public int ReportSharedArticle(ReportSharedArticleRequest reportRequest)
+        {
+            using SqlConnection con = connect("myProjDB");
+            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_ReportSharedArticle_FP", con, new Dictionary<string, object>
+    {
+        { "@ReporterUserId", reportRequest.ReporterUserId },
+        { "@SharedArticleId", reportRequest.SharedArticleId }
+    });
+
+            SqlParameter returnParameter = new SqlParameter
+            {
+                Direction = ParameterDirection.ReturnValue
+            };
+            cmd.Parameters.Add(returnParameter);
+
+            cmd.ExecuteNonQuery();
+            return (int)returnParameter.Value;
+        }
+
     }
 }

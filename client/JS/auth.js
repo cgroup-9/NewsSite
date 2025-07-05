@@ -6,7 +6,6 @@
 function requireLogin() {
     const user = getCurrentUser();
 
-    // אם לא מחובר ומנסה להיכנס לעמוד אחר מ-login/index → מפנה ל-login
     if (!location.pathname.endsWith("index.html") &&
         !location.pathname.endsWith("login.html") &&
         !user) {
@@ -14,7 +13,6 @@ function requireLogin() {
         return;
     }
 
-    // אם מחובר כ-admin ונמצא לא בעמוד adminIndex → מפנה לשם
     if (user && user.name?.toLowerCase() === "admin" &&
         !location.pathname.endsWith("adminIndex.html")) {
         location.href = "adminIndex.html";

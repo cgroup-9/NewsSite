@@ -2,10 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <title>Shared Articles</title>
+    <link href="../CSS/sharedArticleStyle.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../JS/ajaxCall.js"></script>
     <script src="../JS/auth.js"></script>
-    <link href="../CSS/sharedArticleStyle.css" rel="stylesheet" /
-    <script src="../JS/ajaxCall.js"></script>>
-    <title></title>
 </head>
 <body>
     <nav>
@@ -16,8 +17,23 @@
         <button id="authBtn" class="navBtn">🔐 Login</button>
     </nav>
 
-    <h1>📰 Shared Articles by Users</h1>
+    <h1>📰 Articles Shared by Users</h1>
+    <div id="divBtnHideUser">
+        <button id="openFilterModalBtn">Hide Users</button>
+    </div>
+
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <span class="closeBtn">&times;</span>
+            <h2>Select Users to Hide</h2>
+            <div id="userCheckboxList" class="user-list"></div>
+            <button id="applyUserFilterBtn">Apply Filter</button>
+        </div>
+    </div>
+
     <div id="sharedArticlesContainer"></div>
+
     <script src="../JS/sharedArticles.js"></script>
 </body>
 </html>

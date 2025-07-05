@@ -4,7 +4,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #eef3f9;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     color: #333;
 }
 
@@ -26,7 +26,8 @@ nav {
     align-items: center;
 }
 
-    nav a {
+    nav a,
+    .navBtn {
         color: white;
         text-decoration: none;
         margin-right: 20px;
@@ -34,7 +35,8 @@ nav {
         font-size: 18px;
     }
 
-        nav a:hover {
+        nav a:hover,
+        .navBtn:hover {
             text-decoration: underline;
         }
 
@@ -58,7 +60,7 @@ nav {
 form {
     background-color: white;
     max-width: 500px;
-    margin: 0 auto;
+    margin: 40px auto;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -105,6 +107,7 @@ button#submitLogin {
     cursor: pointer;
     width: 100%;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
     button#submitEdit:hover,

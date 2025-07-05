@@ -48,6 +48,97 @@ nav {
         background-color: #0056b3;
     }
 
+/* === Filter Button === */
+
+#divBtnHideUser{
+    text-align:center;
+}
+#openFilterModalBtn {
+    display: inline-block;
+    margin: 20px auto;
+    background-color: #fff;
+    color: #004080;
+    border: 1px solid #ccc;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* === Modal Window === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 20px 30px;
+    width: 50%;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    text-align: right;
+}
+    .modal-content h2{
+        text-align:center;
+    }
+    .closeBtn {
+        float: left;
+        font-size: 24px;
+        font-weight: bold;
+        color: #888;
+        cursor: pointer;
+    }
+
+    .closeBtn:hover {
+        color: #000;
+    }
+
+/* === User List Inside Modal === */
+.user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 20px 0;
+}
+
+    .user-list label {
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    .user-list input[type="checkbox"] {
+        transform: scale(1.2);
+    }
+
+/* Apply Button */
+#applyUserFilterBtn {
+    background-color: #004080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    #applyUserFilterBtn:hover {
+        background-color: #003366;
+    }
+
 /* === Shared Articles Container === */
 #sharedArticlesContainer {
     display: flex;
@@ -57,7 +148,6 @@ nav {
     padding: 30px;
 }
 
-/* === Shared Article Card === */
 .sharedArticleCard {
     background: white;
     border-radius: 12px;
@@ -115,5 +205,9 @@ nav {
 @media screen and (max-width: 768px) {
     .sharedArticleCard {
         width: 90%;
+    }
+
+    .modal-content {
+        width: 85%;
     }
 }

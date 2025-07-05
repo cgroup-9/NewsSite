@@ -8,7 +8,7 @@
     const port = 7019;
     const baseApiUrl = isDevEnv()
         ? `https://localhost:${port}`
-        : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
+        : "https://proj.ruppin.ac.il/cgroup9/test2/tar5";
     const url = `${baseApiUrl}/api/Users/update-user`;
 
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));

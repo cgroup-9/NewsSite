@@ -49,6 +49,39 @@ nav {
         background-color: #0056b3;
     }
 
+/* === Filter Checkboxes === */
+
+#filterContainer {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.checkbox-scroll {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #fff;
+    display: inline-block;
+    text-align: left;
+}
+
+    .checkbox-scroll label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .checkbox-scroll input[type="checkbox"] {
+        margin-right: 8px;
+        transform: scale(1.1);
+        cursor: pointer;
+    }
+
 /* === Article Cards === */
 
 #myArticleContainer {
@@ -58,6 +91,7 @@ nav {
     justify-content: center;
     padding: 30px;
 }
+
 
 .articleCard {
     background: white;
