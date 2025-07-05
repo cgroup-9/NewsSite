@@ -32,7 +32,11 @@ namespace server.Models
             DBservicesUser db = new DBservicesUser();
             return db.ReadAllUsers();
         }
-
+        public static List<Users> ReadAdmin()
+        {
+            DBservicesUser db = new DBservicesUser();
+            return db.ReadAllUsersAdmin();
+        }
         public Users? Login(string email, string password)
         {
             return db.LoginUser(email, password);

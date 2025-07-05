@@ -10,7 +10,7 @@
     const port = 7019;
     const baseApiUrl = isDevEnv()
         ? `https://localhost:${port}`
-        : "https://proj.ruppin.ac.il/cgroup9/test2/tar5";
+        : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
     const loginUrl = `${baseApiUrl}/api/Users/login`;
 
     divLogin.empty();
@@ -51,7 +51,7 @@
 
                 sessionStorage.setItem("isLoggedIn", "true");
                 sessionStorage.setItem("currentUser", JSON.stringify(res));
-                alert("✅ Logged-in!");
+                alert("✔️ Logged-in!");
                 location.href = "index.html";
             },
             err => {

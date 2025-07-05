@@ -5,7 +5,7 @@ function isDevEnv() {
 const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
-    : "https://proj.ruppin.ac.il/cgroup9/test2/tar5";
+    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 
 const apiUrl = `${baseApiUrl}/api/SharedArticle`;
 const getAllUsersUrl = `${baseApiUrl}/api/Users`;
@@ -35,7 +35,7 @@ $(document).ready(() => {
         const sharedId = $(this).data("id");
         const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-        console.log("Reporting sharedId:", sharedId); // ← תראי אם זה NULL או לא קיים
+        console.log("Reporting sharedId:", sharedId); 
 
         if (!currentUser) {
             alert("❌ You must be logged in.");

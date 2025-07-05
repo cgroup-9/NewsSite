@@ -5,7 +5,7 @@
 const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
-    : "https://proj.ruppin.ac.il/cgroup9/test2/tar5";
+    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 const baseUrl = `${baseApiUrl}/api/Articles`;
 
 $(document).ready(() => {

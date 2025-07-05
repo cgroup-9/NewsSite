@@ -1,21 +1,26 @@
 ﻿$(document).ready(() => {
     const divEditUser = $("#editProfileContainer");
 
+    // Detect if running on localhost (development mode)
     function isDevEnv() {
         return location.host.includes("localhost");
     }
 
+    // Set base API URL depending on environment (localhost or deployed)
     const port = 7019;
     const baseApiUrl = isDevEnv()
         ? `https://localhost:${port}`
-        : "https://proj.ruppin.ac.il/cgroup9/test2/tar5";
+        : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
+
     const url = `${baseApiUrl}/api/Users/update-user`;
 
+    // Get current user from session storage
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
+    // Function to send updated user to server
     function updateUser(user) {
         try {
-            console.log("📤 Sending updated user:", JSON.stringify(user));
+            console.log("Sending updated user:", JSON.stringify(user));
             ajaxCall("PUT", url, JSON.stringify(user), updateUserSuc, updateUserFa);
         } catch (err) {
             console.error("❌ Error before PUT:", err);
@@ -23,14 +28,16 @@
         }
     }
 
+    // Callback on success
     function updateUserSuc(res) {
         try {
             if (res && res.message) {
-                alert("✅ " + res.message);
+                alert("✔️ " + res.message);
             } else {
-                alert("✅ Profile updated successfully."); 
+                alert("✔️ Profile updated successfully.");
             }
 
+            // Update session storage with new values
             const updatedUser = {
                 name: $("#usernameTB").val().trim() || currentUser.name,
                 password: $("#passwordTB").val().trim() || $("#currentPasswordTB").val().trim(),
@@ -39,6 +46,7 @@
 
             sessionStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
+            // Reload page to reflect changes
             location.reload();
         } catch (e) {
             alert("⚠️ Profile updated, but response was invalid.");
@@ -46,14 +54,16 @@
         }
     }
 
-
+    // Callback on failure
     function updateUserFa(err) {
         alert("❌ Failed to update user: " + err.statusText);
     }
 
+    // Render form to the page
     divEditUser.empty();
     divEditUser.append('<h2 class="fullRowTitle">Edit My Profile</h2>');
 
+    // Build and inject the form HTML
     let formHtml = `
         <form id="editForm">
             <label for="username">Username</label>
@@ -82,22 +92,25 @@
 
     divEditUser.append(formHtml);
 
+    // Submit button click handler
     $("#submitEdit").click(() => {
         const inputName = $("#usernameTB").val().trim();
         const inputPassword = $("#passwordTB").val().trim();
         const currentPassword = $("#currentPasswordTB").val().trim();
         const inputEmail = $("#emailTB").val().trim();
 
+        // Clear previous errors
         $(".error-msg").text("");
         let hasError = false;
 
-        // the user must put the current password or a new valid password
+        // Require either current or new password
         if (inputPassword === "" && currentPassword === "") {
             $("#currentPasswordTB").addClass("invalid");
             $("#err-currentPasswordTB").text("You must enter your current password or a valid new password.");
             hasError = true;
         }
 
+        // Validate new password if entered
         if (inputPassword !== "") {
             const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
             if (!passRegex.test(inputPassword)) {
@@ -109,6 +122,7 @@
             }
         }
 
+        // Validate name and email format if filled in
         const fields = [
             {
                 id: "usernameTB",
@@ -140,6 +154,7 @@
 
         if (hasError) return;
 
+        // Build final object to send
         const userToUpdate = {
             id: currentUser.id,
             name: inputName || currentUser.name,
@@ -147,7 +162,7 @@
             email: inputEmail || currentUser.email
         };
 
-
+        // Send update request
         updateUser(userToUpdate);
     });
 });

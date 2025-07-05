@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Xml.Linq;
 using server.Models;
@@ -274,6 +275,90 @@ namespace server.DAL
             catch (Exception ex)
             {
                 throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+        public List<Users> ReadAllUsersAdmin()
+        {
+            List<Users> users = new List<Users>();
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllUsersStatus_FP", con, null);
+
+            try
+            {
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Users u = new Users
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        Name = reader["Name"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        Active = Convert.ToBoolean(reader["Active"])
+                    };
+                    users.Add(u);
+                }
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public AdminStats GetAdminStats()
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+            AdminStats stats = new AdminStats();
+
+            try
+            {
+                con = connect("myProjDB");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database connection error: " + ex.Message, ex);
+            }
+
+            cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAdminStats_FP", con, null);
+
+            try
+            {
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    stats.Date = reader.GetDateTime(reader.GetOrdinal("Date")).ToString("yyyy-MM-dd");
+                    stats.LoginCounter = reader.GetInt32(reader.GetOrdinal("loginCounter"));
+                    stats.ApiFetchCounter = reader.GetInt32(reader.GetOrdinal("apiFetchCounter"));
+                    stats.SavedNewsCounter = reader.GetInt32(reader.GetOrdinal("savedNewsCounter"));
+                }
+
+                return stats;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to retrieve admin stats: " + ex.Message, ex);
             }
             finally
             {
