@@ -114,6 +114,30 @@ namespace server.DAL
             cmd.ExecuteNonQuery();
             return (int)returnParameter.Value;
         }
+        public List<ReportedCommentsAdminPanel> GetReportedComments()
+        {
+            using SqlConnection con = connect("myProjDB");
+            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetReportedSharedArticles_FP", con, null);
+
+            List<ReportedCommentsAdminPanel> list = new();
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                ReportedCommentsAdminPanel item = new ReportedCommentsAdminPanel
+                {
+                    ReportId = Convert.ToInt32(reader["ReportId"]),
+                    Comment = reader["Comment"].ToString(),
+                    SharedByUserName = reader["SharedByUserName"].ToString(),
+                    SharedByUserId = Convert.ToInt32(reader["SharedByUserId"]),
+                    ReportDate = Convert.ToDateTime(reader["ReportDate"])
+                };
+                list.Add(item);
+            }
+
+            return list;
+        }
+
 
     }
 }

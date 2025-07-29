@@ -1,0 +1,142 @@
+﻿/* === Base Styling === */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* === Navbar === */
+nav {
+    background-color: #004080;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+    nav a, .navBtn {
+        color: white;
+        text-decoration: none;
+        margin-left: 20px;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+        nav a:hover, .navBtn:hover {
+            text-decoration: underline;
+        }
+
+#authBtn {
+    background-color: #007BFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    #authBtn:hover {
+        background-color: #0056b3;
+    }
+
+/* === Page Title === */
+h1, h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 30px;
+    font-size: 28px;
+}
+
+/* === Report Table Container === */
+#reportsTableContainer {
+    margin: 30px auto;
+    background-color: #fff;
+    padding: 20px;
+    width: 90%;
+    max-width: 1100px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* === Table Styling === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* === Comment Highlight (Optional) === */
+td.comment-cell {
+    color: #c0392b;
+    font-style: italic;
+}
+
+/* === Buttons === */
+button {
+    padding: 8px 12px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    button.resolve {
+        background-color: #28a745;
+    }
+
+    button.block {
+        background-color: #dc3545;
+    }
+
+    button.remove {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+/* === Status Tags (optional future use) === */
+.status-active {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-inactive {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* === Message for empty table === */
+#reportsTableContainer p {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    margin: 20px 0;
+}

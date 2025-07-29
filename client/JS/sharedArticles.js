@@ -37,11 +37,7 @@ $(document).ready(() => {
 
         console.log("Reporting sharedId:", sharedId); 
 
-        if (!currentUser) {
-            alert("❌ You must be logged in.");
-            return;
-        }
-
+        
         if (!confirm("Are you sure you want to report this article as offensive?")) return;
 
         const reportData = {

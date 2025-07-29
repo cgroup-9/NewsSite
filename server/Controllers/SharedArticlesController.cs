@@ -64,6 +64,20 @@ namespace server.Controllers
                 return StatusCode(500, new { message = "Internal server error.", error = ex.Message });
             }
         }
+        [HttpGet("get-reported")]
+        public IActionResult GetReportedComments()
+        {
+            try
+            {
+                var dal = new DBservicesSharedArticles();
+                var reportedList = dal.GetReportedComments();
+                return Ok(reportedList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Failed to load reported comments.", error = ex.Message });
+            }
+        }
 
 
     }

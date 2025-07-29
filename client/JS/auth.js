@@ -13,6 +13,7 @@ function requireLogin() {
         !location.pathname.endsWith("login.html") &&
         !user) {
         // Not logged in and not on login or index -> redirect to login
+        alert("You must be logged in.");
         location.href = "login.html";
         return;
     }
@@ -23,6 +24,7 @@ function requireLogin() {
         user.name?.toLowerCase() === "admin" &&
         !location.pathname.endsWith("adminIndex.html") &&
         !location.pathname.endsWith("adminUsersManagement.html") &&
+        !location.pathname.endsWith("adminReportedComments.html") &&
         !location.pathname.endsWith("adminAiQuestions.html")
 
     ) {

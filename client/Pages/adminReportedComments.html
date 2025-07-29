@@ -2,12 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Admin - AI Questions</title>
+    <title>Reported Comments Admin Panel</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
-    <link href="../CSS/adminAiQ.css" rel="stylesheet" />
-    <!--<script src="../JS/auth.js"></script>--> <!--!!!!!למה זה חוסם את זה צריך לתקן!!!-->
+    <script src="../JS/auth.js"></script>
+    <script src="../JS/ajaxCall.js"></script>
+    <link href="../CSS/adminReportedCommentsStyle.css" rel="stylesheet" />
 </head>
 <body>
     <nav>
@@ -18,12 +19,8 @@
         <button id="authBtn" class="navBtn">🔐 Login</button>
     </nav>
 
-    <div class="chat-container">
-        <div class="avatar">
-            <img src="../Img/1f5b689d-1476-4215-ae42-b2d441b0b892.png" />
-            <button>Start chat with NewsBot🙂</button>
-        </div>
-    </div>
-    <script src="../JS/adminAiQuestions.js"></script>
+    <h2>Reported Shared Comments</h2>
+    <div id="reportsTableContainer"></div>
+    <script src="../JS/adminReportedComments.js"></script>
 </body>
 </html>

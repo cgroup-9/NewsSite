@@ -16,13 +16,7 @@ $(document).ready(() => {
     const divArticles = $("#myArticleContainer");
     const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-    if (!currentUser) {
-        alert("You must be logged in.");
-        window.location.href = "login.html";
-        return;
-    }
-
-    loadArticles();
+       loadArticles();
 
     // Pagination is handled on the server using page and pageSize parameters.
     // We load one page at a time and show a "Next" button only if the current page is full.

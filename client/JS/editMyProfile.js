@@ -32,22 +32,14 @@
     function updateUserSuc(res) {
         try {
             if (res && res.message) {
-                alert("✔️ " + res.message);
+                alert("✔️ " + res.message + "\nPlease log in again to continue.");
             } else {
-                alert("✔️ Profile updated successfully.");
+                alert("✔️ Profile updated successfully.\nPlease log in again to continue.");
             }
+            // Log out the user completely
+            logout(); // This function already clears session and redirects
 
-            // Update session storage with new values
-            const updatedUser = {
-                name: $("#usernameTB").val().trim() || currentUser.name,
-                password: $("#passwordTB").val().trim() || $("#currentPasswordTB").val().trim(),
-                email: $("#emailTB").val().trim() || currentUser.email
-            };
-
-            sessionStorage.setItem("currentUser", JSON.stringify(updatedUser));
-
-            // Reload page to reflect changes
-            location.reload();
+           
         } catch (e) {
             alert("⚠️ Profile updated, but response was invalid.");
             console.error("Response parse error:", e, res);
