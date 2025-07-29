@@ -94,10 +94,9 @@ nav {
 /* === Chart Canvas === */
 canvas {
     display: block;
-    margin: 40px auto;
-    max-width: 600px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    margin: 0 auto;
+    width: 100% !important;
+    height: auto !important;
 }
+
+

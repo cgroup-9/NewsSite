@@ -22,7 +22,9 @@ function requireLogin() {
         user &&
         user.name?.toLowerCase() === "admin" &&
         !location.pathname.endsWith("adminIndex.html") &&
-        !location.pathname.endsWith("adminUsersManagement.html")
+        !location.pathname.endsWith("adminUsersManagement.html") &&
+        !location.pathname.endsWith("adminAiQuestions.html")
+
     ) {
         location.href = "adminIndex.html";
     }

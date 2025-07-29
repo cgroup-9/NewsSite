@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using server.DAL;
 using server.Models;
 using server.Models.server.Models;
 
@@ -59,5 +60,6 @@ namespace server.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
+
     }
 }
