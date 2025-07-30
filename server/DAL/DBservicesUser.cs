@@ -9,6 +9,7 @@ namespace server.DAL
 {
     public class DBservicesUser
     {
+        // Create and open a SQL connection using connection string from appsettings.json
         public SqlConnection connect(string conString)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -20,6 +21,7 @@ namespace server.DAL
             return con;
         }
 
+        // Helper method to create a SqlCommand configured for a stored procedure with given parameters
         private SqlCommand CreateCommandWithStoredProcedureGeneral(string spName, SqlConnection con, Dictionary<string, object> paramDic)
         {
             SqlCommand cmd = new SqlCommand()
@@ -40,6 +42,8 @@ namespace server.DAL
 
             return cmd;
         }
+
+        // Insert a new user using the stored procedure SP_InsertUser_FP
         public int InsertUser(Users user)
         {
             SqlConnection con;
@@ -51,9 +55,10 @@ namespace server.DAL
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ex; // Connection failure
             }
 
+            // Set parameters for the stored procedure
             Dictionary<string, object> paramDic = new Dictionary<string, object>
             {
                 { "@name", user.Name },
@@ -66,10 +71,11 @@ namespace server.DAL
             try
             {
                 cmd.ExecuteNonQuery();
-                return 0;
+                return 0; // Success
             }
             catch (SqlException ex)
             {
+                // 2627/2601 = unique constraint violation (duplicate key)
                 if (ex.Number == 2627 || ex.Number == 2601)
                     return 3;
                 throw;
@@ -80,6 +86,7 @@ namespace server.DAL
             }
         }
 
+        // Attempt to log in a user by email and password
         public Users? LoginUser(string email, string password)
         {
             SqlConnection con;
@@ -110,6 +117,7 @@ namespace server.DAL
 
                 if (reader.Read())
                 {
+                    // Create Users object from DB result
                     u = new Users
                     {
                         Id = Convert.ToInt32(reader["Id"]),
@@ -131,6 +139,7 @@ namespace server.DAL
             }
         }
 
+        // Update an existing user's details (name, email, password)
         public int UpdateUser(Users user)
         {
             SqlConnection con;
@@ -155,6 +164,7 @@ namespace server.DAL
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_UpdateUser_FP", con, paramDic);
 
+            // Set up output parameter to get return value from the stored procedure
             SqlParameter returnValue = new SqlParameter("@ReturnVal", SqlDbType.Int);
             returnValue.Direction = ParameterDirection.ReturnValue;
             cmd.Parameters.Add(returnValue);
@@ -162,12 +172,12 @@ namespace server.DAL
             try
             {
                 cmd.ExecuteNonQuery();
-                return (int)returnValue.Value; // 1 = success, 0 = user not found
+                return (int)returnValue.Value; // 1 = success, 0 = not found
             }
             catch (SqlException ex)
             {
                 if (ex.Number == 2627 || ex.Number == 2601)
-                    return 3;
+                    return 3; // Duplicate email or username
                 throw;
             }
             finally
@@ -175,6 +185,8 @@ namespace server.DAL
                 con.Close();
             }
         }
+
+        // Toggle user active status (true/false)
         public int UpdateUserStatus(int id, bool active)
         {
             SqlConnection con = connect("myProjDB");
@@ -189,7 +201,7 @@ namespace server.DAL
             try
             {
                 int rowsAffected = cmd.ExecuteNonQuery();
-                return rowsAffected; // 1 = success, 0 = user not found
+                return rowsAffected; // 1 = success, 0 = not found
             }
             catch (SqlException ex)
             {
@@ -200,6 +212,8 @@ namespace server.DAL
                 con.Close();
             }
         }
+
+        // Soft-delete a user by marking them as deleted (does not remove from DB)
         public int SoftDeleteUserByEmail(string email)
         {
             SqlConnection con;
@@ -224,7 +238,7 @@ namespace server.DAL
             try
             {
                 cmd.ExecuteNonQuery();
-                return 0;
+                return 0; // Success
             }
             catch (SqlException ex)
             {
@@ -238,6 +252,7 @@ namespace server.DAL
             }
         }
 
+        // Retrieve list of all active users (simplified view)
         public List<Users> ReadAllUsers()
         {
             List<Users> users = new List<Users>();
@@ -281,6 +296,8 @@ namespace server.DAL
                 con.Close();
             }
         }
+
+        // Retrieve list of all users, including inactive ones (for admin view)
         public List<Users> ReadAllUsersAdmin()
         {
             List<Users> users = new List<Users>();
@@ -325,6 +342,7 @@ namespace server.DAL
             }
         }
 
+        // Get aggregated admin statistics from DB (logins, API fetches, saved articles)
         public AdminStats GetAdminStats()
         {
             SqlConnection con;
@@ -365,6 +383,5 @@ namespace server.DAL
                 con.Close();
             }
         }
-
     }
 }

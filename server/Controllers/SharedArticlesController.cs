@@ -10,6 +10,7 @@ namespace server.Controllers
     public class SharedArticleController : ControllerBase
     {
         // POST: api/sharedarticle
+        // Shares an article with a user comment.
         [HttpPost]
         public IActionResult ShareArticle([FromBody] SharedArticleRequest shared)
         {
@@ -25,14 +26,13 @@ namespace server.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
-
-        // GET: api/sharedarticle?hiddenUserIds=3,5,12
+        // GET: api/sharedarticle?hiddenUserIds=3,5,12&page=1&pageSize=10
         [HttpGet]
-        public IActionResult GetSharedArticles([FromQuery] string? hiddenUserIds = null)
+        public IActionResult GetSharedArticles([FromQuery] string? hiddenUserIds = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
             try
             {
-                var list = SharedArticleIndex.GetAllSharedArticles(hiddenUserIds);
+                var list = SharedArticleIndex.GetAllSharedArticles(hiddenUserIds, page, pageSize);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -40,12 +40,16 @@ namespace server.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
+
+
+        // POST: api/sharedarticle/report
+        // Reports a shared article by its ID and reason.
         [HttpPost("report")]
         public IActionResult ReportSharedArticle([FromBody] ReportSharedArticleRequest request)
         {
             try
             {
-                int result = request.Report();   
+                int result = request.Report();
 
                 return result switch
                 {
@@ -64,6 +68,9 @@ namespace server.Controllers
                 return StatusCode(500, new { message = "Internal server error.", error = ex.Message });
             }
         }
+
+        // GET: api/sharedarticle/get-reported
+        // Returns a list of shared article comments that have been reported.
         [HttpGet("get-reported")]
         public IActionResult GetReportedComments()
         {
@@ -78,7 +85,5 @@ namespace server.Controllers
                 return StatusCode(500, new { message = "Failed to load reported comments.", error = ex.Message });
             }
         }
-
-
     }
 }

@@ -13,12 +13,12 @@ namespace server.Models
         public string UrlToImage { get; set; }
         public string Author { get; set; }
         public string Comment { get; set; }
-        public DateTime ShareDate { get; set; }
+        public DateTime DateShared { get; set; }
 
         public SharedArticleIndex() { }
 
         public SharedArticleIndex(int sharedId, int userId, string userName, string articleUrl,
-                                string title, string urlToImage, string author, string comment, DateTime shareDate)
+                                string title, string urlToImage, string author, string comment, DateTime DateShared)
         {
             SharedId = sharedId;
             UserId = userId;
@@ -28,13 +28,14 @@ namespace server.Models
             UrlToImage = urlToImage;
             Author = author;
             Comment = comment;
-            ShareDate = shareDate;
+            DateShared = DateShared;
         }
 
-        public static List<SharedArticleIndex> GetAllSharedArticles(string? hiddenUserIds = null)
+        public static List<SharedArticleIndex> GetAllSharedArticles(string? hiddenUserIds = null, int page = 1, int pageSize = 20)
         {
             DBservicesSharedArticles db = new DBservicesSharedArticles();
-            return db.GetSharedArticles(hiddenUserIds);
+            return db.GetSharedArticles(hiddenUserIds, page, pageSize);
         }
+
     }
 }

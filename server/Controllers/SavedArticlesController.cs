@@ -9,13 +9,13 @@ namespace server.Controllers
     [ApiController]
     public class SavedArticleController : ControllerBase
     {
-        // GET: api/savedarticle/{userId}?page=1&pageSize=20
+        // GET: api/savedarticle/{userId}?page=1&pageSize=20&categories=Sports,Health
         [HttpGet("{userId}")]
-        public IActionResult GetSavedArticles(int userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        public IActionResult GetSavedArticles(int userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? categories = null)
         {
             try
             {
-                var savedArticles = SaveArticleRequest.GetSavedArticles(userId, page, pageSize);
+                var savedArticles = SaveArticleRequest.GetSavedArticles(userId, page, pageSize, categories);
                 return Ok(savedArticles);
             }
             catch (Exception ex)
@@ -23,6 +23,7 @@ namespace server.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
+
 
 
         // POST: api/savedarticle

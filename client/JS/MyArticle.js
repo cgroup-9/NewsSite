@@ -1,4 +1,6 @@
-﻿function isDevEnv() {
+﻿// ✅ Fixed with category + start/end date filters + English comments throughout
+
+function isDevEnv() {
     return location.host.includes("localhost");
 }
 
@@ -11,47 +13,54 @@ const baseUrl = `${baseApiUrl}/api/SavedArticle`;
 let articles = [];
 let currentPage = 1;
 const pageSize = 20;
+let selectedCategories = [];
+let selectedStartDate = null;
+let selectedEndDate = null;
 
 $(document).ready(() => {
     const divArticles = $("#myArticleContainer");
     const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-       loadArticles();
+    loadArticles();
 
-    // Pagination is handled on the server using page and pageSize parameters.
-    // We load one page at a time and show a "Next" button only if the current page is full.
-
+    // Load saved articles from the server with pagination
     function loadArticles() {
         ajaxCall("GET", `${baseUrl}/${currentUser.id}?page=${currentPage}&pageSize=${pageSize}`, null,
-
             res => {
                 articles = res;
-                renderArticles();
+                renderCategoryFilters();   // Render category checkboxes
+                renderDateFilters();       // Render start and end date inputs
+                renderArticles();          // Display filtered articles
 
-                // If we got exactly pageSize results, maybe there are more pages.
-                // If less than that → no more pages
                 const hasNextPage = res.length === pageSize;
-
                 renderPagination(currentPage, hasNextPage, function (nextPage) {
                     currentPage = nextPage;
-                    loadArticles(); // fetch next page from server
+                    loadArticles();
                 });
             },
             err => alert("Failed to load paged articles: " + (err.responseText || err.statusText))
         );
     }
 
-    // Render the articles on the page
+    // Display articles matching selected filters
     function renderArticles() {
-        if (articles.length === 0) {
-            alert("No articles found in the database. You are being redirected to the main page.");
-            window.location.href = "index.html";
+        divArticles.empty();
+
+        const filtered = articles.filter(a => {
+            const pubDate = new Date(a.publishedAt);
+            return (
+                (selectedCategories.length === 0 || selectedCategories.includes(a.category)) &&
+                (!selectedStartDate || pubDate >= new Date(selectedStartDate)) &&
+                (!selectedEndDate || pubDate <= new Date(selectedEndDate))
+            );
+        });
+
+        if (filtered.length === 0) {
+            divArticles.append(`<p class="noResults">📭 No articles found matching your filters.</p>`);
             return;
         }
 
-        divArticles.empty();
-
-        for (let a of articles) {
+        for (let a of filtered) {
             const cardHtml = `
                 <div class="articleCard">
                     <h2>${a.title}</h2>
@@ -69,13 +78,78 @@ $(document).ready(() => {
         }
     }
 
-    // Handle removing an article from saved list
+    // Renders checkbox filters for categories
+    function renderCategoryFilters() {
+        const allCategories = [...new Set(articles.map(a => a.category))].filter(Boolean);
+        const filterDiv = $("#filterContainer");
+        filterDiv.empty();
+
+        const categoryHtml = allCategories.map(cat => `
+            <label>
+                <input type="checkbox" class="categoryCheckbox" value="${cat}" checked /> ${cat}
+            </label>`).join("");
+
+        filterDiv.append(`<div class="checkbox-scroll">${categoryHtml}</div>`);
+    }
+
+    // Renders input fields for filtering by start and end dates
+    function renderDateFilters() {
+        const dateDiv = $("#filterContainer");
+
+        const dateInputs = `
+            <div class="dateFilters">
+                <label>From: <input type="date" id="startDateInput"></label>
+                <label>To: <input type="date" id="endDateInput"></label>
+                <button id="applyFilterBtn" class="filterBtn">Apply Filters</button>
+            </div>`;
+
+        dateDiv.append(dateInputs);
+    }
+
+    // Handle category checkbox selection
+    $(document).on("change", ".categoryCheckbox", function () {
+        selectedCategories = $(".categoryCheckbox:checked").map(function () {
+            return this.value;
+        }).get();
+    });
+
+    // Apply filters when filter button is clicked
+    $(document).on("click", "#applyFilterBtn", function () {
+        selectedCategories = $(".categoryCheckbox:checked").map(function () {
+            return this.value;
+        }).get();
+
+        selectedStartDate = $("#startDateInput").val();
+        selectedEndDate = $("#endDateInput").val();
+
+        renderArticles();
+    });
+
+    // Render pagination controls for previous/current/next pages
+    function renderPagination(currentPage, hasNextPage, onPageClick) {
+        const paginationContainer = $("#paginationContainer");
+        paginationContainer.empty();
+
+        if (currentPage > 1) {
+            paginationContainer.append(`<button class="paginationBtn" data-page="${currentPage - 1}">⬅️ Prev</button>`);
+        }
+
+        paginationContainer.append(`<button class="paginationBtn activePage" data-page="${currentPage}">${currentPage}</button>`);
+
+        if (hasNextPage) {
+            paginationContainer.append(`<button class="paginationBtn" data-page="${currentPage + 1}">Next ➡️</button>`);
+        }
+
+        $(".paginationBtn").click(function () {
+            const page = $(this).data("page");
+            onPageClick(page);
+        });
+    }
+
+    // Remove article from saved list
     $(document).on("click", ".removeArticleBtn", function () {
         const user = JSON.parse(sessionStorage.getItem("currentUser"));
-        if (!user) {
-            alert("❌ You must be logged in.");
-            return;
-        }
+        if (!user) return alert("❌ You must be logged in.");
 
         const articleUrl = $(this).data("articleurl");
 
@@ -87,76 +161,35 @@ $(document).ready(() => {
         ajaxCall("DELETE", `${baseApiUrl}/api/savedarticle`, JSON.stringify(deleteRequest),
             res => {
                 alert("🗑️ " + res.message);
-
-                // Option 1: Reload the page
                 location.reload();
-
-                // Option 2: Remove the card directly (uncomment if needed)
-                // $(this).closest(".articleCard").remove();
             },
-            err => {
-                alert("❌ Failed to delete article: " + (err.responseJSON?.message || err.statusText));
-            }
+            err => alert("❌ Failed to delete article: " + (err.responseJSON?.message || err.statusText))
         );
     });
 
-    // Create pagination buttons dynamically
-    function renderPagination(currentPage, hasNextPage, onPageClick) {
-        const paginationContainer = $("#paginationContainer");
-        paginationContainer.empty();
-
-        // Previous button
-        if (currentPage > 1) {
-            paginationContainer.append(`<button class="paginationBtn" data-page="${currentPage - 1}">⬅️ Prev</button>`);
-        }
-
-        // Current page
-        paginationContainer.append(`<button class="paginationBtn activePage" data-page="${currentPage}">${currentPage}</button>`);
-
-        // If current result count equals pageSize, maybe there's another page
-        if (hasNextPage) {
-            paginationContainer.append(`<button class="paginationBtn" data-page="${currentPage + 1}">Next ➡️</button>`);
-        }
-
-        // Bind page clicks
-        $(".paginationBtn").click(function () {
-            const page = $(this).data("page");
-            onPageClick(page);
-        });
-    }
-
-   
-
-    // Save the current article to be shared
+    // Share article modal handling
     let currentShareArticleUrl = null;
 
-    // Open modal on share click
+    // Open share modal
     $(document).on("click", ".shareArticleBtn", function () {
         currentShareArticleUrl = $(this).data("articleurl");
-        $("#shareComment").val(""); // Clear textarea
+        $("#shareComment").val("");
         $("#shareModal").show();
     });
 
-    // Close modal
+    // Close share modal
     $(document).on("click", ".close", function () {
         $("#shareModal").hide();
         currentShareArticleUrl = null;
     });
 
-    // Confirm share with comment
+    // Submit shared article with comment
     $("#confirmShareBtn").click(() => {
         const user = JSON.parse(sessionStorage.getItem("currentUser"));
         const comment = $("#shareComment").val().trim();
 
-        if (!user) {
-            alert("❌ You must be logged in.");
-            return;
-        }
-
-        if (!comment) {
-            alert("✏️ Please enter a comment before sharing.");
-            return;
-        }
+        if (!user) return alert("❌ You must be logged in.");
+        if (!comment) return alert("✏️ Please enter a comment before sharing.");
 
         const shareData = {
             userId: user.id,
@@ -169,9 +202,7 @@ $(document).ready(() => {
                 alert("✔️ Article shared successfully!");
                 $("#shareModal").hide();
             },
-            err => {
-                alert("❌ Failed to share article: " + (err.responseText || err.statusText));
-            }
+            err => alert("❌ Failed to share article: " + (err.responseText || err.statusText))
         );
     });
 });

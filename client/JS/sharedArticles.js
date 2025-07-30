@@ -1,43 +1,31 @@
-function isDevEnv() {
-    return location.host.includes("localhost");
-}
-
 const port = 7019;
-const baseApiUrl = isDevEnv()
+const baseApiUrl = location.host.includes("localhost")
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 
 const apiUrl = `${baseApiUrl}/api/SharedArticle`;
 const getAllUsersUrl = `${baseApiUrl}/api/Users`;
 
+let currentPage = 1;
+const pageSize = 12;
+
 $(document).ready(() => {
     fetchAllUsers();         // Load all users into the modal
     fetchSharedArticles();   // Load all shared articles
 
-    // Open filter modal
-    $("#openFilterModalBtn").on("click", function () {
-        $("#filterModal").show();
-    });
+    $("#openFilterModalBtn").on("click", () => $("#filterModal").show());
+    $(".closeBtn").on("click", () => $("#filterModal").hide());
 
-    // Close filter modal
-    $(".closeBtn").on("click", function () {
-        $("#filterModal").hide();
-    });
-
-    // Apply filter and reload articles
     $("#applyUserFilterBtn").on("click", function () {
         $("#filterModal").hide();
+        currentPage = 1; // reset to first page when filter changes
         fetchSharedArticles();
     });
 
-    // Handle article report
     $(document).on("click", ".reportBtn", function () {
         const sharedId = $(this).data("id");
         const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-        console.log("Reporting sharedId:", sharedId); 
-
-        
         if (!confirm("Are you sure you want to report this article as offensive?")) return;
 
         const reportData = {
@@ -54,13 +42,9 @@ $(document).ready(() => {
                     alert("❌ Failed to report article: " + (err.responseText || err.statusText));
                 }
             }
-
         );
     });
 
-
-
-    // Return list of selected user IDs to hide
     function getHiddenUserIds() {
         return $(".userCheckbox:checked")
             .map(function () { return $(this).val(); })
@@ -68,20 +52,39 @@ $(document).ready(() => {
             .join(",");
     }
 
-    // Fetch and display shared articles, optionally filtering by hidden user IDs
     function fetchSharedArticles() {
         const hiddenIds = getHiddenUserIds();
-        const url = hiddenIds
-            ? `${apiUrl}?hiddenUserIds=${hiddenIds}`
-            : apiUrl;
+        const queryParams = new URLSearchParams();
+
+        if (hiddenIds) queryParams.append("hiddenUserIds", hiddenIds);
+        queryParams.append("page", currentPage);
+        queryParams.append("pageSize", pageSize);
+
+        const url = `${apiUrl}?${queryParams.toString()}`;
 
         ajaxCall("GET", url, null,
-            res => renderSharedArticles(res),
+            res => {
+                renderSharedArticles(res);
+
+                // Determine if there are more pages
+                const hasNextPage = res.length === pageSize;
+                const totalPages = hasNextPage ? currentPage + 1 : Math.max(currentPage, 1);
+
+                console.log("Calling renderPagination with:", currentPage, totalPages);
+                console.log("res.length =", res.length);
+                console.log("pageSize =", pageSize);
+
+                renderPagination(currentPage, totalPages, (page) => {
+                    currentPage = page;
+                    console.log("Rendering pagination. Current:", currentPage, "Total:", totalPages);
+
+                    fetchSharedArticles();
+                });
+            },
             err => console.error("❌ Failed to fetch shared articles:", err.responseText || err.statusText)
         );
     }
 
-    // Render shared article cards on the page
     function renderSharedArticles(articles) {
         const container = $("#sharedArticlesContainer");
         container.empty();
@@ -92,8 +95,6 @@ $(document).ready(() => {
         }
 
         articles.forEach(a => {
-
-            console.log("Shared article object:", a);
             const cardHtml = `
             <div class="sharedArticleCard">
                 <div class="userName">👤 ${a.userName}</div>
@@ -105,13 +106,11 @@ $(document).ready(() => {
                     <strong>Link:</strong> <a href="${a.articleUrl}" target="_blank">Read Article</a>
                 </div>
                 <button class="reportBtn" data-id="${a.sharedId}">🚫 Report as Offensive</button>
-            </div>
-        `;
+            </div>`;
             container.append(cardHtml);
         });
     }
 
-    // Fetch all users and populate the modal with checkboxes
     function fetchAllUsers() {
         ajaxCall("GET", getAllUsersUrl, null,
             res => {
@@ -124,8 +123,7 @@ $(document).ready(() => {
                         <label>
                             <input type="checkbox" class="userCheckbox" value="${u.id}" />
                             ${u.name}
-                        </label>
-                    `);
+                        </label>`);
                     }
                 });
             },

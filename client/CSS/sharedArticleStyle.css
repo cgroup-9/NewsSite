@@ -200,6 +200,33 @@ nav {
         .articleInfo a:hover {
             text-decoration: underline;
         }
+/* === Pagination === */
+
+#paginationContainer {
+    text-align: center;
+    padding: 20px;
+}
+
+.paginationBtn {
+    margin: 4px;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .paginationBtn.activePage {
+        background-color: #004080;
+        color: white;
+        cursor: default;
+    }
+
+    .paginationBtn:disabled {
+        background: #ddd;
+        color: #777;
+    }
 
 /* === Responsive === */
 @media screen and (max-width: 768px) {

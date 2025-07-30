@@ -1,11 +1,11 @@
 ﻿function renderPagination(currentPage, totalPages, onPageChange, containerSelector = "#paginationContainer") {
     const container = $(containerSelector);
     container.empty();
-
     // Exit if totalPages is invalid or only one page
-    if (isNaN(totalPages) || totalPages <= 1) return;
+    if (isNaN(totalPages) || totalPages < 1) return;
 
     let html = `<div id="pagination">`;
+    console.log("Pagination HTML:", html);
 
     // Previous button
     if (currentPage > 1) {

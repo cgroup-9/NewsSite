@@ -21,11 +21,29 @@
     </nav>
 
     <h2 class="fullRowTitle">My Articles</h2>
+    <div id="filterContainer">
+        <h3>Filter by Categories</h3>
+        <div class="checkbox-scroll" id="categoryFilters">
+            <!-- Will be filled dynamically from fetched categories -->
+        </div>
+        <button id="applyFilterBtn" class="filterBtn">Filter</button>
 
+    </div>
     <div id="myArticleContainer"></div>
     <div id="paginationContainer"></div>
 
     <!-- Modal for sharing an article -->
+    <!--
+    Modal for sharing an article:
+    - This modal pops up when the user chooses to share an article.
+    - It includes:
+       • A close button (×) to hide the modal.&times;is the code for the X sing
+       • A <textarea> where the user can write a comment before sharing.
+       • A "Share" button to confirm and submit the share action.
+    - The modal is hidden by default with `style="display:none;"`.
+    - It can be shown/hidden using JavaScript/jQuery (e.g., with .show() / .hide()).
+    -->
+
     <div id="shareModal" class="modal" style="display:none;">
         <div class="modal-content">
             <span class="close">&times;</span>

@@ -81,6 +81,20 @@ nav {
         transform: scale(1.1);
         cursor: pointer;
     }
+.filterBtn {
+    background-color: #004080;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
+    .filterBtn:hover {
+        background-color: #007BFF;
+    }
 
 /* === Article Cards === */
 

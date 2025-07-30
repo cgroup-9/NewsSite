@@ -36,10 +36,7 @@
             } else {
                 alert("✔️ Profile updated successfully.\nPlease log in again to continue.");
             }
-            // Log out the user completely
-            logout(); // This function already clears session and redirects
-
-           
+            logout(); // Clears session and redirects
         } catch (e) {
             alert("⚠️ Profile updated, but response was invalid.");
             console.error("Response parse error:", e, res);
@@ -55,7 +52,7 @@
     divEditUser.empty();
     divEditUser.append('<h2 class="fullRowTitle">Edit My Profile</h2>');
 
-    // Build and inject the form HTML
+    // Build and inject the form HTML (removed current password field)
     let formHtml = `
         <form id="editForm">
             <label for="username">Username</label>
@@ -66,11 +63,6 @@
             <label for="password">New Password</label>
             <input type="password" id="passwordTB" placeholder="New Password" />
             <div class="error-msg" id="err-passwordTB"></div>
-            <br>
-
-            <label for="currentPassword">Current Password</label>
-            <input type="password" id="currentPasswordTB" placeholder="Current Password" />
-            <div class="error-msg" id="err-currentPasswordTB"></div>
             <br>
 
             <label for="email">Email</label>
@@ -88,19 +80,11 @@
     $("#submitEdit").click(() => {
         const inputName = $("#usernameTB").val().trim();
         const inputPassword = $("#passwordTB").val().trim();
-        const currentPassword = $("#currentPasswordTB").val().trim();
         const inputEmail = $("#emailTB").val().trim();
 
         // Clear previous errors
         $(".error-msg").text("");
         let hasError = false;
-
-        // Require either current or new password
-        if (inputPassword === "" && currentPassword === "") {
-            $("#currentPasswordTB").addClass("invalid");
-            $("#err-currentPasswordTB").text("You must enter your current password or a valid new password.");
-            hasError = true;
-        }
 
         // Validate new password if entered
         if (inputPassword !== "") {
@@ -150,7 +134,7 @@
         const userToUpdate = {
             id: currentUser.id,
             name: inputName || currentUser.name,
-            password: inputPassword || currentPassword || currentUser.password,
+            password: inputPassword || currentUser.password,
             email: inputEmail || currentUser.email
         };
 

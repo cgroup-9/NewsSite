@@ -135,17 +135,18 @@ namespace server.DAL
             }
         }
 
-        // Gets all saved articles for a specific user
-        public List<SaveArticleRequest> GetSavedArticles(int userId, int page, int pageSize)
+        // Gets all saved articles for a specific user, optionally filtered by category
+        public List<SaveArticleRequest> GetSavedArticles(int userId, int page, int pageSize, string? categories = null)
         {
             using var con = connect("myProjDB");
 
             var paramDic = new Dictionary<string, object>
-            {
-                { "@userId", userId },
-                { "@page", page },
-                { "@pageSize", pageSize }
-            };
+    {
+        { "@userId", userId },
+        { "@page", page },
+        { "@pageSize", pageSize },
+        { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories }
+    };
 
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSavedArticles_FP", con, paramDic);
 
@@ -171,6 +172,7 @@ namespace server.DAL
             return articles;
         }
 
+
         // Helper function to safely read string values from a SQL result row.
         // In SQL Server, if a column contains NULL, accessing it with .ToString()
         // will throw an exception (because DBNull cannot be cast to string).
@@ -179,7 +181,21 @@ namespace server.DAL
         // - Otherwise, it returns the string value of the column.
         //
         // This avoids runtime errors and makes code cleaner and safer.
-        private string SafeGetString(SqlDataReader r, string col) =>
-            r[col] == DBNull.Value ? "" : r[col].ToString();
+
+        // DBNull.Value represents a NULL from the database (SQL). It's not the same as C# null — 
+        // it's a special object used to indicate that a column has no value in the database.
+
+        private string SafeGetString(SqlDataReader reader, string columnName)
+        {
+            if (reader[columnName] == DBNull.Value)
+            {
+                return "";
+            }
+            else
+            {
+                return reader[columnName].ToString();
+            }
+        }
+
     }
 }

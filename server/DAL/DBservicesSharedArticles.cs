@@ -62,16 +62,20 @@ namespace server.DAL
             return (int)returnParameter.Value;
         }
 
-        // Retrieves all shared articles (optionally filters by hidden user IDs)
-        public List<SharedArticleIndex> GetSharedArticles(string? hiddenUserIds = null)
+        public List<SharedArticleIndex> GetSharedArticles(string? hiddenUserIds = null, int page = 1, int pageSize = 20)
         {
             using SqlConnection con = connect("myProjDB");
 
-            var paramDic = new Dictionary<string, object>();
+            var paramDic = new Dictionary<string, object>
+    {
+        { "@Page", page },
+        { "@PageSize", pageSize }
+    };
+
             if (!string.IsNullOrEmpty(hiddenUserIds))
                 paramDic.Add("@HiddenUserIds", hiddenUserIds);
 
-            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllSharedArticles_FP", con, paramDic.Count > 0 ? paramDic : null);
+            SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllSharedArticles_FP", con, paramDic);
 
             List<SharedArticleIndex> sharedList = new();
 
@@ -87,7 +91,8 @@ namespace server.DAL
                     Title = reader["Title"].ToString(),
                     UrlToImage = reader["UrlToImage"].ToString(),
                     Author = reader["Author"].ToString(),
-                    Comment = reader["Comment"].ToString()
+                    Comment = reader["Comment"].ToString(),
+                    DateShared = Convert.ToDateTime(reader["DateShared"])
                 };
                 sharedList.Add(sa);
             }
