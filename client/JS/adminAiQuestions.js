@@ -1,4 +1,14 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿function isDevEnv() {
+    return location.host.includes("localhost");
+}
+
+const port = 7019; // הפורט הנכון שלך
+const baseApiUrl = isDevEnv()
+    ? `https://localhost:${port}`
+    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
+
+// נשתמש ב-baseApiUrl גם ל-AI
+document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.querySelector(".avatar button");
     const chatContainer = document.querySelector(".chat-container");
 
@@ -16,18 +26,18 @@
         questionChoices.className = "question-choices";
 
         const questions = [
-            "How many users logged in during the past week?",
-            "How many users registered in the past month?",
-            "How many users registered in the past six months?",
-            "Which category was saved the most in the last month?",
-            "Which day had the highest activity in the past week?"
+            { id: 1, text: "Which day had the highest number of logins in the past week?" },
+            { id: 2, text: "Which day had the highest number of logins in the past month?" },
+            { id: 3, text: "Which day had the highest number of saved articles in the past month?" },
+            { id: 4, text: "Which category was saved the most in the past month?" },
+            { id: 5, text: "Which day had the highest combined activity (logins + shares) in the past six months?" }
         ];
 
         questions.forEach(q => {
             const btn = document.createElement("button");
-            btn.textContent = q;
+            btn.textContent = q.text;
             btn.className = "question-btn";
-            btn.addEventListener("click", () => handleUserQuestion(q));
+            btn.addEventListener("click", () => handleUserQuestion(q.id, q.text));
             questionChoices.appendChild(btn);
         });
 
@@ -37,7 +47,7 @@
     });
 });
 
-function handleUserQuestion(questionText) {
+function handleUserQuestion(questionId, questionText) {
     const chatMessages = document.getElementById("chatMessages");
 
     const userMsg = document.createElement("div");
@@ -45,12 +55,23 @@ function handleUserQuestion(questionText) {
     userMsg.textContent = questionText;
     chatMessages.appendChild(userMsg);
 
-    // Simulated bot response – will later connect to real AI
-    setTimeout(() => {
-        const botMsg = document.createElement("div");
-        botMsg.className = "chat-message bot";
-        botMsg.textContent = "🤖 Analyzing your data... (simulated response)";
-        chatMessages.appendChild(botMsg);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }, 800);
+    // קריאת AJAX ל-API עם baseApiUrl הנכון
+    ajaxCall(
+        "GET",
+        `${baseApiUrl}/api/ai/question/${questionId}`,
+        null,
+        function (data) {
+            const botMsg = document.createElement("div");
+            botMsg.className = "chat-message bot";
+            botMsg.textContent = `🤖 ${data.answer}`;
+            chatMessages.appendChild(botMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        },
+        function (error) {
+            const botMsg = document.createElement("div");
+            botMsg.className = "chat-message bot error";
+            botMsg.textContent = "⚠️ Error fetching AI response.";
+            chatMessages.appendChild(botMsg);
+        }
+    );
 }
