@@ -384,31 +384,7 @@ namespace server.DAL
             }
         }
 
-        // This function returns login statistics for the past X days from Admin_FP table
-        public List<LoginStats> GetLoginsByDays(int daysBack)
-        {
-            List<LoginStats> statsList = new List<LoginStats>(); // List to store results
-
-            using (SqlConnection con = connect("myProjDB")) 
-            {
-                Dictionary<string, object> paramDic = new Dictionary<string, object>();
-                paramDic.Add("@DaysBack", daysBack); // Add parameter for SP
-
-                SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetLoginsPastWeek_FP", con, paramDic); // Create command
-
-                SqlDataReader dr = cmd.ExecuteReader(); // Execute reader
-
-                while (dr.Read()) // Loop through rows
-                {
-                    LoginStats stat = new LoginStats();
-                    stat.Date = Convert.ToDateTime(dr["date"]); 
-                    stat.LoginCounter = Convert.ToInt32(dr["loginCounter"]); 
-                    statsList.Add(stat); 
-                }
-            }
-
-            return statsList; 
-        }
+        
 
 
     }

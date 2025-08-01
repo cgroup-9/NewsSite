@@ -7,7 +7,6 @@ const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 
-// נשתמש ב-baseApiUrl גם ל-AI
 document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.querySelector(".avatar button");
     const chatContainer = document.querySelector(".chat-container");

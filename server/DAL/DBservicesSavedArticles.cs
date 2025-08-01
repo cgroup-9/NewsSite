@@ -141,12 +141,12 @@ namespace server.DAL
             using var con = connect("myProjDB");
 
             var paramDic = new Dictionary<string, object>
-    {
-        { "@userId", userId },
-        { "@page", page },
-        { "@pageSize", pageSize },
-        { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories }
-    };
+                {
+                    { "@userId", userId },
+                    { "@page", page },
+                    { "@pageSize", pageSize },
+                    { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories }
+                };
 
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSavedArticles_FP", con, paramDic);
 
@@ -172,6 +172,7 @@ namespace server.DAL
             return articles;
         }
 
+        
 
         // Helper function to safely read string values from a SQL result row.
         // In SQL Server, if a column contains NULL, accessing it with .ToString()
