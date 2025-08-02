@@ -229,12 +229,72 @@ nav {
     }
 
 /* === Responsive === */
+/* === Responsive Enhancements === */
+
+/* Tablet adjustments */
 @media screen and (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack navbar links */
+        padding: 10px;
+    }
+
+        nav a, .navBtn {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 20px;
+    }
+
     .sharedArticleCard {
-        width: 90%;
+        width: 95%; /* Full width on smaller tablets */
     }
 
     .modal-content {
-        width: 85%;
+        width: 90%;
+        padding: 15px;
     }
 }
+
+/* Mobile adjustments */
+@media screen and (max-width: 480px) {
+    nav {
+        padding: 8px;
+    }
+
+        nav a, .navBtn {
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .sharedArticleCard {
+        width: 100%; /* Full width on mobile */
+        padding: 10px;
+    }
+
+    .comment {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .articleInfo {
+        font-size: 0.9rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .paginationBtn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+}
+

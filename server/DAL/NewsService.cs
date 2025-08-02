@@ -12,14 +12,14 @@ namespace server.DAL
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public NewsService()
+        public NewsService(IConfiguration config)
         {
             // Initialize HttpClient and set a User-Agent header (required by some APIs)
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "MyNewsApp");
 
             // API key for authenticating with the News API
-            _apiKey = "bdbd65f8143048ee8f2dcc1592903813";
+            _apiKey = config["ApiKeys:NewsApi"];
         }
 
         // This method fetches top news headlines from the API based on country and (optionally) multiple categories

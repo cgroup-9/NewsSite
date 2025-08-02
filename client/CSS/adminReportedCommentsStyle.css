@@ -50,7 +50,7 @@ h1, h2 {
     font-size: 28px;
 }
 
-/* === Report Table Container === */
+/* === Reports Table Container === */
 #reportsTableContainer {
     margin: 30px auto;
     background-color: #fff;
@@ -88,7 +88,7 @@ tr:hover {
     background-color: #f1f1f1;
 }
 
-/* === Comment Highlight (Optional) === */
+/* === Comment Highlight (Special Style) === */
 td.comment-cell {
     color: #c0392b;
     font-style: italic;
@@ -122,7 +122,7 @@ button {
         color: #212529;
     }
 
-/* === Status Tags (optional future use) === */
+/* === Status Tags === */
 .status-active {
     color: #28a745;
     font-weight: bold;
@@ -133,10 +133,42 @@ button {
     font-weight: bold;
 }
 
-/* === Message for empty table === */
+/* === Empty Table Message === */
 #reportsTableContainer p {
     text-align: center;
     font-size: 16px;
     color: #666;
     margin: 20px 0;
+}
+
+/* === Responsive Adjustments === */
+
+/* Tablet */
+@media (max-width: 768px) {
+    #reportsTableContainer {
+        overflow-x: auto; /* Horizontal scroll for table */
+    }
+
+    table {
+        font-size: 14px; /* Slightly smaller font */
+    }
+
+    th, td {
+        padding: 10px; /* Reduce padding */
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    #reportsTableContainer {
+        overflow-x: auto; /* Keep scroll */
+    }
+
+    table {
+        min-width: 600px; /* Prevent column wrapping */
+    }
+
+    th, td {
+        padding: 8px; /* Compact rows */
+    }
 }

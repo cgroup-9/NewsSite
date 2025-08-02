@@ -1,4 +1,4 @@
-﻿/* === General === */
+﻿/* === General Page Style === */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #eef3f9;
@@ -44,7 +44,7 @@ nav {
         background-color: #0056b3;
     }
 
-/* === Chat Container === */
+/* === Chat Container (Main Box) === */
 .chat-container {
     max-width: 900px;
     margin: 50px auto;
@@ -55,7 +55,7 @@ nav {
     text-align: center;
 }
 
-/* Avatar Section */
+/* === Avatar Section === */
 .avatar {
     display: flex;
     flex-direction: column;
@@ -69,12 +69,13 @@ nav {
         border-radius: 50%;
     }
 
-/* Chat Box */
+/* === Chat Box === */
 .chat-box {
     margin-top: 30px;
     text-align: left;
 }
 
+/* Messages container */
 .messages {
     max-height: 400px;
     overflow-y: auto;
@@ -84,6 +85,7 @@ nav {
     margin-bottom: 20px;
 }
 
+/* === Chat Messages === */
 .chat-message {
     padding: 10px 15px;
     margin: 10px 0;
@@ -92,29 +94,17 @@ nav {
     word-wrap: break-word;
     font-size: 16px;
     line-height: 1.4;
-}
-
-    .chat-message.user {
-        background-color: #d0e6ff;
-        align-self: flex-end;
-        text-align: left;
-        margin-right: auto;
-    }
-
-    .chat-message.bot {
-        background-color: #ffffff;
-        border: 1px solid #ccc;
-        margin-left: auto;
-        text-align: right;
-    }
-
-.chat-message {
     position: relative;
     display: inline-block;
     clear: both;
 }
 
+    /* User messages */
     .chat-message.user {
+        background-color: #d0e6ff;
+        align-self: flex-end;
+        text-align: left;
+        margin-right: auto;
         float: left;
         border-top-left-radius: 0;
     }
@@ -131,7 +121,12 @@ nav {
             border-bottom: 10px solid transparent;
         }
 
+    /* Bot messages */
     .chat-message.bot {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        margin-left: auto;
+        text-align: right;
         float: right;
         border-top-right-radius: 0;
     }
@@ -148,8 +143,7 @@ nav {
             border-bottom: 10px solid transparent;
         }
 
-
-/* Question Buttons */
+/* === Question Buttons === */
 .question-choices {
     display: flex;
     flex-direction: column;
@@ -171,3 +165,50 @@ nav {
     .question-btn:hover {
         background-color: #0056b3;
     }
+
+/* === Responsive Adjustments === */
+
+/* Tablet size */
+@media (max-width: 768px) {
+    .chat-box {
+        flex-direction: column; /* Stack chat parts */
+        padding: 10px;
+    }
+
+    .question-choices {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 buttons per row */
+        gap: 8px;
+    }
+
+    .chat-message {
+        font-size: 14px; /* Slightly smaller text */
+        padding: 8px;
+    }
+
+    .avatar img {
+        width: 120px; /* Adjust avatar size */
+        height: auto;
+    }
+}
+
+/* Mobile size */
+@media (max-width: 480px) {
+    .chat-box {
+        padding: 5px; /* Less padding for small screens */
+    }
+
+    .question-choices {
+        grid-template-columns: 1fr; /* 1 button per row */
+        gap: 6px;
+    }
+
+    .chat-message {
+        font-size: 13px; /* Smaller text for mobile */
+        padding: 6px;
+    }
+
+    .avatar img {
+        width: 100px; /* Smaller avatar */
+    }
+}

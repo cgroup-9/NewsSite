@@ -10,7 +10,6 @@ body {
     height: 100vh;
 }
 
-
 /* ========== Register Container ========== */
 #registerContainer {
     background-color: white;
@@ -22,7 +21,6 @@ body {
     text-align: center;
 }
 
-
 /* ========== Headings ========== */
 h2 {
     margin-bottom: 20px;
@@ -30,7 +28,6 @@ h2 {
     font-size: 1.6rem;
     font-weight: 500;
 }
-
 
 /* ========== Form ========== */
 form {
@@ -58,7 +55,6 @@ input[type="email"] {
         border-color: #3498db;
     }
 
-
 /* ========== Submit Button ========== */
 button {
     background-color: #2980b9;
@@ -76,7 +72,6 @@ button {
         background-color: #3498db;
     }
 
-
 /* ========== Error Handling ========== */
 .error-msg {
     color: red;
@@ -88,11 +83,37 @@ button {
     border: 1px solid red;
 }
 
+/* ========== Responsive Enhancements ========== */
 
-/* ========== Responsive ========== */
+/* Tablet adjustments */
+@media (max-width: 768px) {
+    #registerContainer {
+        width: 95%; /* Use more width on tablet */
+        padding: 35px 25px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    input, button {
+        font-size: 15px;
+    }
+}
+
+/* Mobile adjustments */
 @media (max-width: 500px) {
     #registerContainer {
         padding: 30px 20px;
         width: 90%;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    input, button {
+        font-size: 14px;
+        padding: 10px;
     }
 }

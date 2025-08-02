@@ -12,11 +12,12 @@ namespace server.Controllers
     public class AiController : ControllerBase
     {
         private readonly HttpClient _httpClient;
-        private readonly string apiKey = "AIzaSyDYixE0wbvbfGWMn-tPL28stJ7SP8QtFms"; 
+        private readonly string geminiApiKey;
 
-        public AiController()
+        public AiController(IConfiguration config)
         {
             _httpClient = new HttpClient();
+            geminiApiKey = config["ApiKeys:Gemini"];
         }
 
         [HttpPost("ask")]
@@ -43,7 +44,7 @@ namespace server.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
+                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={geminiApiKey}",
 
                 content);
 
@@ -129,7 +130,7 @@ namespace server.Controllers
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
+                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={geminiApiKey}",
                 content);
 
             if (!response.IsSuccessStatusCode)

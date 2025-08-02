@@ -10,9 +10,9 @@ namespace server.Controllers
     {
         private readonly NewsService news;
 
-        public ArticlesController()
+        public ArticlesController(IConfiguration config)
         {
-            news = new NewsService();
+            news = new NewsService(config);
         }
 
         // GET api/articles?country=il&categories=technology,health

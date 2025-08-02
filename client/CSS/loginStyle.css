@@ -1,4 +1,5 @@
 ﻿/* ========== General Styles ========== */
+/* Center page with flexbox and clean background */
 body {
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
@@ -10,8 +11,8 @@ body {
     height: 100vh;
 }
 
-
 /* ========== Login Container ========== */
+/* Main box for login form */
 #loginContainer {
     background-color: white;
     padding: 40px 30px;
@@ -21,7 +22,6 @@ body {
     text-align: center;
 }
 
-
 /* ========== Headings ========== */
 h2 {
     margin-bottom: 20px;
@@ -30,8 +30,8 @@ h2 {
     font-weight: 500;
 }
 
-
 /* ========== Login Form ========== */
+/* Arrange form fields vertically */
 form {
     display: flex;
     flex-direction: column;
@@ -47,7 +47,6 @@ input[type="password"] {
     border-radius: 6px;
     margin-bottom: 15px;
 }
-
 
 /* ========== Submit Button ========== */
 button {
@@ -65,7 +64,6 @@ button {
         background-color: #3498db;
     }
 
-
 /* ========== Links ========== */
 a {
     display: block;
@@ -78,8 +76,8 @@ a {
         text-decoration: underline;
     }
 
-
 /* ========== Responsive Design ========== */
+/* Adjust login box for mobile view */
 @media (max-width: 500px) {
     #loginContainer {
         width: 90%;

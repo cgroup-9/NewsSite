@@ -1,5 +1,4 @@
 ﻿/* === GENERAL LAYOUT === */
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #eef3f9;
@@ -8,6 +7,7 @@ body {
     color: #333;
 }
 
+/* Page title centered */
 .fullRowTitle {
     text-align: center;
     margin-bottom: 30px;
@@ -15,9 +15,7 @@ body {
     color: #004080;
 }
 
-
 /* === NAVIGATION === */
-
 nav {
     background-color: #004080;
     padding: 12px 24px;
@@ -54,9 +52,8 @@ nav {
         background-color: #0056b3;
     }
 
-
 /* === FORM STYLE === */
-
+/* Main form box styling */
 form {
     background-color: white;
     max-width: 500px;
@@ -85,17 +82,20 @@ input[type="email"] {
     box-sizing: border-box;
 }
 
+/* Invalid input styling */
 input.invalid {
     border-color: #dc3545;
     background-color: #fdecea;
 }
 
+/* Error messages */
 .error-msg {
     color: #dc3545;
     font-size: 13px;
     margin-bottom: 10px;
 }
 
+/* Submit buttons */
 button#submitEdit,
 button#submitLogin {
     background-color: #004080;
@@ -115,9 +115,8 @@ button#submitLogin {
         background-color: #007BFF;
     }
 
-
 /* === RESPONSIVE === */
-
+/* Adjust form for small screens */
 @media screen and (max-width: 600px) {
     body {
         font-size: 18px;

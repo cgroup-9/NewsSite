@@ -15,7 +15,6 @@ body {
 }
 
 /* === Navbar === */
-
 nav {
     background-color: #004080;
     display: flex;
@@ -50,7 +49,6 @@ nav {
     }
 
 /* === Filter Checkboxes === */
-
 #filterContainer {
     text-align: center;
     margin: 20px auto;
@@ -81,6 +79,7 @@ nav {
         transform: scale(1.1);
         cursor: pointer;
     }
+
 .filterBtn {
     background-color: #004080;
     color: white;
@@ -97,7 +96,6 @@ nav {
     }
 
 /* === Article Cards === */
-
 #myArticleContainer {
     display: flex;
     flex-wrap: wrap;
@@ -105,7 +103,6 @@ nav {
     justify-content: center;
     padding: 30px;
 }
-
 
 .articleCard {
     background: white;
@@ -160,7 +157,6 @@ nav {
     }
 
 /* === Buttons in Card === */
-
 .removeArticleBtn,
 .shareArticleBtn {
     margin-top: 10px;
@@ -191,7 +187,6 @@ nav {
     }
 
 /* === Pagination === */
-
 #paginationContainer {
     text-align: center;
     padding: 20px;
@@ -219,7 +214,6 @@ nav {
     }
 
 /* === Modal === */
-
 .modal {
     position: fixed;
     z-index: 999;
@@ -290,13 +284,46 @@ nav {
 
 /* === Responsive === */
 
+/* Tablet adjustments */
 @media screen and (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Stack navbar */
+        padding: 10px;
+    }
+
+        nav a, .navBtn {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
     .articleCard {
-        width: 90%;
+        width: 90%; /* Almost full width on tablet */
     }
 
     .modal-content {
-        margin-top: 25%;
-        padding: 20px;
+        width: 85%; /* Wider modal for small screen */
+    }
+}
+
+/* Mobile adjustments */
+@media screen and (max-width: 480px) {
+    .fullRowTitle {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .articleCard {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .paginationBtn {
+        padding: 6px 10px;
+        font-size: 0.85rem;
     }
 }
