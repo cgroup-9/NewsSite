@@ -136,23 +136,24 @@ namespace server.DAL
         }
 
         // Gets all saved articles for a specific user, optionally filtered by category
-        public List<SaveArticleRequest> GetSavedArticles(int userId, int page, int pageSize, string? categories = null)
+        public List<SaveArticleRequest> GetSavedArticles(
+    int userId, int page, int pageSize, string? categories = null, string? searchTerm = null)
         {
             using var con = connect("myProjDB");
 
             var paramDic = new Dictionary<string, object>
-                {
-                    { "@userId", userId },
-                    { "@page", page },
-                    { "@pageSize", pageSize },
-                    { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories }
-                };
+    {
+        { "@userId", userId },
+        { "@page", page },
+        { "@pageSize", pageSize },
+        { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories },
+        { "@searchTerm", string.IsNullOrWhiteSpace(searchTerm) ? (object)DBNull.Value : searchTerm }
+    };
 
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSavedArticles_FP", con, paramDic);
 
             var articles = new List<SaveArticleRequest>();
             using SqlDataReader reader = cmd.ExecuteReader();
-
             while (reader.Read())
             {
                 articles.Add(new SaveArticleRequest
@@ -172,7 +173,8 @@ namespace server.DAL
             return articles;
         }
 
-        
+
+
 
         // Helper function to safely read string values from a SQL result row.
         // In SQL Server, if a column contains NULL, accessing it with .ToString()

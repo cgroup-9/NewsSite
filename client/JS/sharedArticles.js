@@ -112,22 +112,25 @@ $(document).ready(() => {
     }
 
     function fetchAllUsers() {
+        const currentUser = JSON.parse(sessionStorage.getItem("currentUser")); // Get logged-in user
+
         ajaxCall("GET", getAllUsersUrl, null,
             res => {
                 const usersContainer = $("#userCheckboxList");
                 usersContainer.empty();
 
                 res.forEach(u => {
-                    if (u.name.toLowerCase() !== "admin") {
+                    if (u.name.toLowerCase() !== "admin" && u.id !== currentUser.id) {
                         usersContainer.append(`
-                        <label>
-                            <input type="checkbox" class="userCheckbox" value="${u.id}" />
-                            ${u.name}
-                        </label>`);
+                    <label>
+                        <input type="checkbox" class="userCheckbox" value="${u.id}" />
+                        ${u.name}
+                    </label>`);
                     }
                 });
             },
             err => console.error("Failed to load users", err)
         );
     }
+
 });

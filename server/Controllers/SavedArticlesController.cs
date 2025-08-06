@@ -11,11 +11,12 @@ namespace server.Controllers
     {
         // GET: api/savedarticle/{userId}?page=1&pageSize=20&categories=Sports,Health
         [HttpGet("{userId}")]
-        public IActionResult GetSavedArticles(int userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? categories = null)
+        public IActionResult GetSavedArticles(int userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20,
+                                      [FromQuery] string? categories = null, [FromQuery] string? searchTerm = null)
         {
             try
             {
-                var savedArticles = SaveArticleRequest.GetSavedArticles(userId, page, pageSize, categories);
+                var savedArticles = SaveArticleRequest.GetSavedArticles(userId, page, pageSize, categories, searchTerm);
                 return Ok(savedArticles);
             }
             catch (Exception ex)
@@ -23,6 +24,7 @@ namespace server.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
+
 
 
 

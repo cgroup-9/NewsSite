@@ -47,12 +47,12 @@ namespace server.Models
             return db.DeleteSavedArticle(userId, articleUrl);
         }
 
-        // Retrieves all articles saved by a specific user, optionally filtered by categories
-        public static List<SaveArticleRequest> GetSavedArticles(int userId, int page, int pageSize, string? categories = null)
+        // Retrieves all articles saved by a specific user, optionally filtered by categories & search term
+        public static List<SaveArticleRequest> GetSavedArticles(
+            int userId, int page, int pageSize, string? categories = null, string? searchTerm = null)
         {
             DBservicesSavedArticles db = new DBservicesSavedArticles();
-            return db.GetSavedArticles(userId, page, pageSize, categories);
+            return db.GetSavedArticles(userId, page, pageSize, categories, searchTerm);
         }
-
     }
 }
