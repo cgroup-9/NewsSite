@@ -28,11 +28,11 @@ namespace server.Controllers
         }
         // GET: api/sharedarticle?hiddenUserIds=3,5,12&page=1&pageSize=10
         [HttpGet]
-        public IActionResult GetSharedArticles([FromQuery] string? hiddenUserIds = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+        public IActionResult GetSharedArticles([FromQuery] string? hiddenUserIds = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] int? userId = null)
         {
             try
             {
-                var list = SharedArticleIndex.GetAllSharedArticles(hiddenUserIds, page, pageSize);
+                var list = SharedArticleIndex.GetAllSharedArticles(hiddenUserIds, page, pageSize, userId);
                 return Ok(list);
             }
             catch (Exception ex)
@@ -40,6 +40,7 @@ namespace server.Controllers
                 return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
+
 
 
         // POST: api/sharedarticle/report
@@ -85,5 +86,37 @@ namespace server.Controllers
                 return StatusCode(500, new { message = "Failed to load reported comments.", error = ex.Message });
             }
         }
+
+        [HttpPost("like")]
+        public async Task<IActionResult> LikeArticle([FromBody] LikeRequest like)
+        {
+            try
+            {
+                var db = new DBservicesSharedArticles(); 
+                bool success = await db.LikeSharedArticleAsync(like.SharedArticleId, like.UserId);
+                return Ok(new { message = "Liked successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("unlike")]
+        public async Task<IActionResult> UnlikeArticle([FromBody] LikeRequest like)
+        {
+            try
+            {
+                var db = new DBservicesSharedArticles();
+                bool success = await db.UnlikeSharedArticleAsync(like.SharedArticleId, like.UserId);
+                return Ok(new { message = "Unliked successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

@@ -60,6 +60,11 @@ $(document).ready(() => {
         queryParams.append("page", currentPage);
         queryParams.append("pageSize", pageSize);
 
+        const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+        if (currentUser?.id) {
+            queryParams.append("userId", currentUser.id);
+        }
+
         const url = `${apiUrl}?${queryParams.toString()}`;
 
         ajaxCall("GET", url, null,
@@ -95,6 +100,14 @@ $(document).ready(() => {
         }
 
         articles.forEach(a => {
+            const isLiked = a.alreadyLiked;
+            const likeBtnHtml = `
+            <button class="likeToggleBtn" 
+                    data-id="${a.sharedId}" 
+                    data-liked="${isLiked}">
+                ${isLiked ? "💔 Unlike" : "❤️ Like"}
+            </button>`;
+
             const cardHtml = `
             <div class="sharedArticleCard">
                 <div class="userName">👤 ${a.userName}</div>
@@ -105,11 +118,19 @@ $(document).ready(() => {
                     <strong>Title:</strong> ${a.title}<br>
                     <strong>Link:</strong> <a href="${a.articleUrl}" target="_blank">Read Article</a>
                 </div>
+
+                <div class="likeSection">
+                    ${likeBtnHtml}
+                    <span class="likeCount" id="likeCount-${a.sharedId}">${a.likesCount}</span>
+                </div>
+
                 <button class="reportBtn" data-id="${a.sharedId}">🚫 Report as Offensive</button>
             </div>`;
+
             container.append(cardHtml);
         });
     }
+
 
     function fetchAllUsers() {
         const currentUser = JSON.parse(sessionStorage.getItem("currentUser")); // Get logged-in user
@@ -132,5 +153,48 @@ $(document).ready(() => {
             err => console.error("Failed to load users", err)
         );
     }
+
+    $(document).on("click", ".likeToggleBtn", function () {
+        const btn = $(this);
+        const sharedId = btn.data("id");
+        const isLiked = btn.data("liked");
+        const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+            alert("❌ You must be logged in to like/unlike.");
+            return;
+        }
+
+        const data = {
+            sharedArticleId: sharedId,
+            userId: currentUser.id
+        };
+
+        const endpoint = isLiked ? "unlike" : "like";
+
+        ajaxCall("POST", `${apiUrl}/${endpoint}`, JSON.stringify(data),
+            res => {
+                const counterElem = $(`#likeCount-${sharedId}`);
+                let count = parseInt(counterElem.text()) || 0;
+
+                if (isLiked) {
+                    count--;
+                    btn.html("❤️ Like");
+                    btn.data("liked", false);
+                } else {
+                    count++;
+                    btn.html("💔 Unlike");
+                    btn.data("liked", true);
+                }
+
+                counterElem.text(count);
+            },
+            err => {
+                alert("❌ Failed to process like/unlike: " + (err.responseText || err.statusText));
+            }
+        );
+    });
+
+
 
 });

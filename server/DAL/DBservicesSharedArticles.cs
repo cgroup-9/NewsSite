@@ -62,18 +62,21 @@ namespace server.DAL
             return (int)returnParameter.Value;
         }
 
-        public List<SharedArticleIndex> GetSharedArticles(string? hiddenUserIds = null, int page = 1, int pageSize = 20)
+        public List<SharedArticleIndex> GetSharedArticles(string? hiddenUserIds = null, int page = 1, int pageSize = 20, int? currentUserId = null)
         {
             using SqlConnection con = connect("myProjDB");
 
             var paramDic = new Dictionary<string, object>
-    {
-        { "@Page", page },
-        { "@PageSize", pageSize }
-    };
+            {
+                { "@Page", page },
+                { "@PageSize", pageSize }
+            };
 
             if (!string.IsNullOrEmpty(hiddenUserIds))
                 paramDic.Add("@HiddenUserIds", hiddenUserIds);
+
+            if (currentUserId.HasValue)
+                paramDic.Add("@CurrentUserId", currentUserId.Value);
 
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetAllSharedArticles_FP", con, paramDic);
 
@@ -92,13 +95,16 @@ namespace server.DAL
                     UrlToImage = reader["UrlToImage"].ToString(),
                     Author = reader["Author"].ToString(),
                     Comment = reader["Comment"].ToString(),
-                    DateShared = Convert.ToDateTime(reader["DateShared"])
+                    DateShared = Convert.ToDateTime(reader["DateShared"]),
+                    LikesCount = Convert.ToInt32(reader["LikesCount"]),
+                    AlreadyLiked = Convert.ToBoolean(reader["AlreadyLiked"])
                 };
                 sharedList.Add(sa);
             }
 
             return sharedList;
         }
+
 
         // Reports a shared article using SP_ReportSharedArticle_FP
         public int ReportSharedArticle(ReportSharedArticleRequest reportRequest)
@@ -141,6 +147,49 @@ namespace server.DAL
             }
 
             return list;
+        }
+
+        public async Task<bool> LikeSharedArticleAsync(int sharedId, int userId)
+        {
+            SqlConnection con = connect("myProjDB"); // כבר נפתח בפנים
+            SqlCommand cmd = new SqlCommand("INSERT INTO SharedArticleLikes_FP (SharedId, UserId) VALUES (@SharedId, @UserId)", con);
+            cmd.Parameters.AddWithValue("@SharedId", sharedId);
+            cmd.Parameters.AddWithValue("@UserId", userId);
+
+            try
+            {
+                await cmd.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2627) // Violation of PRIMARY KEY (duplicate like)
+                    throw new Exception("You already liked this article.");
+
+                throw; // any other error
+            }
+            finally
+            {
+                con.Close(); // נסגור בסוף ידנית
+            }
+        }
+
+        public async Task<bool> UnlikeSharedArticleAsync(int sharedId, int userId)
+        {
+            using SqlConnection con = connect("myProjDB");
+            SqlCommand cmd = new SqlCommand("DELETE FROM SharedArticleLikes_FP WHERE SharedId = @SharedId AND UserId = @UserId", con);
+            cmd.Parameters.AddWithValue("@SharedId", sharedId);
+            cmd.Parameters.AddWithValue("@UserId", userId);
+
+            try
+            {
+                await cmd.ExecuteNonQueryAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
