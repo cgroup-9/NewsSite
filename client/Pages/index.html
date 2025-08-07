@@ -2,6 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title></title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -9,25 +11,33 @@
     <link href="../CSS/indexStyle.css" rel="stylesheet" />
     <script src="../JS/auth.js"></script>
     <script src="../JS/ajaxCall.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 
 <body>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="MyArticle.html">My Saved Article</a>
-        <a href="sharedArticles.html">Shared Articles</a>
-        <a href="editMyProfile.html">Edit My Profile</a>
-        <button id="authBtn" class="navBtn">🔐 Login</button>
+    <!-- ===== MAIN NAV ===== -->
+    <nav class="mainNav" id="mainNav">
+        <a href="index.html" class="navItem logo">Home</a>
+        <a href="myArticle.html" class="navItem">My Saved Article</a>
+        <a href="sharedArticles.html" class="navItem">Shared Articles</a>
+        <a href="editMyProfile.html" class="navItem">Edit My Profile</a>
+        <button id="authBtn" class="navItem">🔐 Login</button>
+        <!-- hamburger -->
+        <button class="hamburger" aria-label="toggle menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
 
-
-    <div id="categoryFilter" ></div>
+    <div id="categoryFilter"></div>
 
     <script src="../JS/index.js"></script>
 
 
     <div id="newsContainer"></div>
+    <script src="../JS/nav.js" defer></script>
 
 </body>
 </html>

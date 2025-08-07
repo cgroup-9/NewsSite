@@ -8,51 +8,13 @@ body {
     font-size: clamp(14px, 3vw, 20px);
 }
 
-/* Page title centered */
+/* Page title (centered) */
 .fullRowTitle {
     text-align: center;
     margin-bottom: 30px;
     font-size: clamp(24px, 3vw, 36px);
     color: #004080;
 }
-
-/* === NAVIGATION === */
-nav {
-    background-color: #004080;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    flex-wrap: wrap;
-}
-
-    nav a,
-    .navBtn {
-        color: white;
-        text-decoration: none;
-        margin-left: 20px;
-        font-weight: 600;
-        font-size: clamp(14px, 3vw, 22px);
-    }
-
-        nav a:hover,
-        .navBtn:hover {
-            text-decoration: underline;
-        }
-
-#authBtn {
-    background-color: #007BFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: clamp(14px, 2.2vw, 20px);
-}
-
-    #authBtn:hover {
-        background-color: #0056b3;
-    }
 
 /* === FORM STYLE === */
 form {
@@ -84,13 +46,13 @@ input[type="email"] {
     box-sizing: border-box;
 }
 
-/* Invalid input styling */
+/* Invalid input state */
 input.invalid {
     border-color: #dc3545;
     background-color: #fdecea;
 }
 
-/* Error messages */
+/* Error message text */
 .error-msg {
     color: #dc3545;
     font-size: clamp(14px, 3vw, 20px);
@@ -117,28 +79,138 @@ button#submitLogin {
         background-color: #007BFF;
     }
 
-/* === RESPONSIVE: SMALL SCREENS === */
+/* ====== NAV (mobile overrides) ====== */
+.mainNav .navItem {
+    font-size: clamp(16px, 3.8vw, 22px);
+    padding: 10px 12px;
+}
+
+.hamburger {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mainNav {
+        gap: 8px;
+        padding: 12px 16px;
+    }
+
+        .mainNav .navItem {
+            font-size: clamp(18px, 4.2vw, 24px);
+        }
+
+    /* On mobile: show hamburger; items stack vertically when menu is open */
+    .hamburger {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 36px;
+        height: 28px;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+    }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: #fff;
+            border-radius: 2px;
+        }
+
+    /* .open is toggled by nav.js on the <nav> element */
+    .mainNav {
+        flex-wrap: wrap;
+    }
+
+        .mainNav.open .navItem {
+            width: 100%;
+            display: block;
+            text-align: left;
+            margin: 6px 0;
+            padding: 12px 6px;
+        }
+}
+
+/* ====== Larger, touch-friendly typography for the form (tablet & down) ====== */
+@media (max-width: 768px) {
+    body {
+        font-size: 19px;
+    }
+
+    .fullRowTitle {
+        font-size: clamp(26px, 6vw, 34px);
+        margin-bottom: 22px;
+    }
+
+    form {
+        width: 92%;
+        margin: 24px auto;
+        padding: 22px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    label {
+        font-size: clamp(18px, 4.8vw, 22px);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        font-size: clamp(18px, 4.8vw, 22px);
+        padding: 14px 14px;
+        border-radius: 10px;
+    }
+
+    button#submitEdit,
+    button#submitLogin {
+        font-size: clamp(18px, 4.8vw, 22px);
+        padding: 14px 16px;
+        min-height: 48px; /* comfortable touch target */
+        border-radius: 10px;
+    }
+
+    .error-msg {
+        font-size: clamp(16px, 4.4vw, 20px);
+    }
+}
+
+/* ====== Very small mobile ====== */
+@media (max-width: 480px) {
+    body {
+        font-size: 20px;
+    }
+
+    .fullRowTitle {
+        font-size: clamp(28px, 7vw, 36px);
+    }
+
+    form {
+        width: 94%;
+        padding: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        padding: 16px;
+    }
+
+    button#submitEdit,
+    button#submitLogin {
+        padding: 16px 18px;
+        min-height: 52px;
+    }
+}
+
+/* === RESPONSIVE: XS screens (safety net) === */
 @media screen and (max-width: 400px) {
     body {
         font-size: 18px;
         padding: 4px;
     }
-
-    nav {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 8px;
-    }
-
-        nav a,
-        .navBtn,
-        #authBtn {
-            font-size: 16px;
-            margin: 4px 0;
-            display: block;
-            width: 100%;
-            text-align: left;
-        }
 
     .fullRowTitle {
         font-size: 24px;

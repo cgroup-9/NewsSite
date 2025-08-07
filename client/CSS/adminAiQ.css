@@ -7,43 +7,6 @@ body {
     color: #333;
 }
 
-/* === Navbar === */
-nav {
-    background-color: #004080;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-}
-
-    nav a,
-    .navBtn {
-        color: white;
-        text-decoration: none;
-        margin-left: 20px;
-        font-weight: 600;
-        font-size: 18px;
-    }
-
-        nav a:hover,
-        .navBtn:hover {
-            text-decoration: underline;
-        }
-
-#authBtn {
-    background-color: #007BFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-    #authBtn:hover {
-        background-color: #0056b3;
-    }
-
 /* === Chat Container (Main Box) === */
 .chat-container {
     max-width: 900px;

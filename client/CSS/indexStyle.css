@@ -15,44 +15,6 @@ body {
     text-align: center;
 }
 
-/* === Navbar === */
-nav {
-    background-color: #004080;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    flex-wrap: wrap;
-}
-
-    nav a,
-    .navBtn {
-        color: white;
-        text-decoration: none;
-        margin-left: 20px;
-        font-weight: 600;
-        font-size: clamp(14px, 3vw, 22px);
-    }
-
-        nav a:hover,
-        .navBtn:hover {
-            text-decoration: underline;
-        }
-
-#authBtn {
-    background-color: #007BFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: clamp(14px, 2.2vw, 20px);
-}
-
-    #authBtn:hover {
-        background-color: #0056b3;
-    }
-
 /* === Main Content (Articles Grid) === */
 #newsContainer,
 #myArticleContainer {
@@ -186,17 +148,6 @@ nav {
     .articleCard {
         width: 90%;
     }
-
-    nav {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 10px;
-    }
-
-        nav a,
-        .navBtn {
-            margin: 5px 0;
-        }
 }
 
 @media screen and (max-width: 480px) {

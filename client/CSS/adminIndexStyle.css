@@ -79,7 +79,9 @@ h1 {
 
 canvas {
     display: block;
-    width: 100% !important;
+    margin: 0 auto; 
+    width: 90% !important; 
+    max-width: 800px; 
     height: auto !important;
     max-height: 420px;
 }
@@ -124,12 +126,14 @@ canvas {
         }
 
     .statsChartdiv {
-        width: 100%;
+        width: 90%;
         padding: 20px;
         margin: 36px auto;
     }
 
     canvas {
+        width: 95% !important;
+        max-width: 600px;
         max-height: 340px;
     }
 }
@@ -168,13 +172,15 @@ canvas {
         }
 
     .statsChartdiv {
-        width: 100%;
+        width: 90%;
         padding: 20px 12px;
         margin: 30px auto;
     }
 
     canvas {
-        height: 260px !important;
+        width: 100% !important;
+        max-width: 360px;
+        height: 250px !important;
         max-height: 260px;
     }
 }
@@ -194,7 +200,7 @@ canvas {
     }
 
     canvas {
-        height: 240px !important;
+        height: 230px !important;
     }
 }
 

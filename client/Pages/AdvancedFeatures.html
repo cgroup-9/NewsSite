@@ -4,20 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Functionality</title>
-    <link href="../CSS/indexStyle.css" rel="stylesheet" /> 
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../CSS/navStyle.css" rel="stylesheet" />
+    <script src="../JS/auth.js"></script>
+    <link href="../CSS/indexStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="MyArticle.html">My Saved Articles</a>
-        <a href="SharedNews.html">Shared Articles</a>
-        <a href="adminAIQuestions.html">AI Chat</a>
-        <a href="AdvancedFeatures.html">Advanced Features</a>
-        <button id="authBtn" class="navBtn">Login</button>
+    <!-- ===== MAIN NAV ===== -->
+    <nav class="mainNav" id="mainNav">
+        <a href="adminIndex.html" class="navItem logo">Board</a>
+        <a href="adminUsersManagement.html" class="navItem">Users List</a>
+        <a href="adminReportedComments.html" class="navItem">Reported Comments</a>
+        <a href="adminAiQuestions.html" class="navItem">AI Chat</a>
+        <a href="advancedFeatures.html" class="navItem">Advanced Features</a>
+        <button id="authBtn" class="navItem">🔐 Login</button>
+
+        <!-- hamburger -->
+        <button class="hamburger" aria-label="toggle menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
 
     <h1 class="fullRowTitle">Advanced Functionality</h1>
-     
+
     <section id="newsContainer">
         <div class="articleCard">
             <h2>AI Assistant Chat</h2>
@@ -37,5 +47,7 @@
             </p>
         </div>
     </section>
+    <script src="../JS/nav.js" defer></script>
+    <script src="../JS/advancedFeatures.js"></script>
 </body>
 </html>

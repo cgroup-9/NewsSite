@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reported Comments Admin Panel</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -9,18 +10,29 @@
     <script src="../JS/auth.js"></script>
     <script src="../JS/ajaxCall.js"></script>
     <link href="../CSS/adminReportedCommentsStyle.css" rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <nav>
-        <a href="adminIndex.html">Board</a>
-        <a href="adminUsersManagement.html">Users List</a>
-        <a href="adminReportedComments.html">Reported Comments</a>
-        <a href="adminAiQuestions.html">AI Chat</a>
-        <button id="authBtn" class="navBtn">🔐 Login</button>
+    <!-- ===== MAIN NAV ===== -->
+    <nav class="mainNav" id="mainNav">
+        <a href="adminIndex.html" class="navItem logo">Board</a>
+        <a href="adminUsersManagement.html" class="navItem">Users List</a>
+        <a href="adminReportedComments.html" class="navItem">Reported Comments</a>
+        <a href="adminAiQuestions.html" class="navItem">AI Chat</a>
+        <a href="advancedFeatures.html" class="navItem">Advanced Features</a>
+        <button id="authBtn" class="navItem">🔐 Login</button>
+
+        <!-- hamburger -->
+        <button class="hamburger" aria-label="toggle menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
 
     <h2>Reported Shared Comments</h2>
     <div id="reportsTableContainer"></div>
+    <script src="../JS/nav.js" defer></script>
     <script src="../JS/adminReportedComments.js"></script>
 </body>
 </html>
