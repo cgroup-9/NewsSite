@@ -1,0 +1,100 @@
+﻿/* ===== בסיס – זהה ל-NAV הכחול המקורי ===== */
+.mainNav {
+    background: #004080;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 22px 28px;
+    min-height: 72px;
+}
+
+    .mainNav .navItem {
+        color: #fff;
+        text-decoration: none;
+        white-space: nowrap;
+        font: 600 20px/1.4 'Segoe UI',sans-serif;
+        margin: 10px 14px;
+        padding: 10px 14px;
+        border-radius: 4px;
+        transition: .3s;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+        .mainNav .navItem:hover {
+            background: rgba(255,255,255,.12);
+        }
+
+    .mainNav .logo {
+        margin-right: auto;
+    }
+
+/* ===== כפתור ☰ / X ===== */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+    .hamburger span {
+        display: block;
+        width: 28px;
+        height: 3px;
+        margin: 5px 0;
+        background: #fff;
+        transition: .4s;
+    }
+
+/* ===== מובייל (<600px) – Drop-down ===== */
+@media(max-width:599px) {
+    .hamburger {
+        display: block;
+        margin-left: auto;
+    }
+    /* הסתירי לינקים כברירת מחדל */
+    .mainNav .navItem:not(.logo) {
+        display: none;
+    }
+
+    /* פתוח */
+    .mainNav.open .navItem {
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
+
+        .mainNav.open .navItem:not(.logo) {
+            padding: 16px 18px;
+            font-size: 24px;
+        }
+
+    /* המבורגר ↔ X */
+    .mainNav.open .hamburger span:nth-child(1) {
+        transform: rotate(45deg) translate(5px,6px);
+    }
+
+    .mainNav.open .hamburger span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mainNav.open .hamburger span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px,-6px);
+    }
+}
+
+/* ===== ריחוף קטן בדסקטופ ===== */
+@media(hover:hover) {
+    .navItem:hover {
+        transform: translateY(-2px);
+    }
+}
+
+/* נגישות */
+.navItem:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}

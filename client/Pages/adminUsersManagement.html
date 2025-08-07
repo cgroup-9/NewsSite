@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Admin Panel</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -9,14 +9,22 @@
     <link href="../CSS/adminUsersManagementStyle.css" rel="stylesheet" />
     <script src="../JS/auth.js"></script>
     <script src="../JS/ajaxCall.js"></script>
+
+
 </head>
 <body>
-    <nav>
-        <a href="adminIndex.html">Board</a>
-        <a href="adminUsersManagement.html">Users List</a>
-        <a href="adminReportedComments.html">Reported Comments</a>
-        <a href="adminAiQuestions.html">AI Chat</a>
-        <button id="authBtn" class="navBtn">🔐 Login</button>
+    <!-- ===== MAIN NAV ===== -->
+    <nav class="mainNav" id="mainNav">
+        <a href="adminIndex.html" class="navItem logo">Board</a>
+        <a href="adminUsersManagement.html" class="navItem">Users List</a>
+        <a href="adminReportedComments.html" class="navItem">Reported Comments</a>
+        <a href="adminAiQuestions.html" class="navItem">AI Chat</a>
+        <button id="authBtn" class="navItem">🔐 Login</button>
+
+        <!-- hamburger -->
+        <button class="hamburger" aria-label="toggle menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
 
     <h1>User Admin Panel</h1>
