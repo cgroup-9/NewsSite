@@ -11,13 +11,23 @@
     <script src="../JS/ajaxCall.js"></script>
 </head>
 <body>
-    <nav>
-        <a href="adminIndex.html">Board</a>
-        <a href="adminUsersManagement.html">Users List</a>
-        <a href="adminReportedComments.html">Reported Comments</a>
-        <a href="adminAiQuestions.html">AI Chat</a>
-        <button id="authBtn" class="navBtn">🔐 Login</button>
+    <!-- ===== NAVBAR / SLIDING MENU ===== -->
+    <nav id="sideNav">
+        <div class="menu-btn" id="menuBtn" aria-label="toggle menu">
+            <div class="line line--1"></div>
+            <div class="line line--2"></div>
+            <div class="line line--3"></div>
+        </div>
+
+        <div class="nav-links">
+            <a href="adminIndex.html" class="link">Board</a>
+            <a href="adminUsersManagement.html" class="link">Users List</a>
+            <a href="adminReportedComments.html" class="link">Reported Comments</a>
+            <a href="adminAiQuestions.html" class="link">AI Chat</a>
+            <button id="authBtn" class="navBtn link">🔐 Login</button>
+        </div>
     </nav>
+
     <h1>User Admin Panel</h1>
 
     <div id="userTableContainer">

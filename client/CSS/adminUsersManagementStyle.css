@@ -1,184 +1,302 @@
 ﻿/* === Base Styling === */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
     background: #eef3f9;
     margin: 0;
     padding: 0;
     color: #333;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.55;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box
 }
 
 /* === Navbar === */
 nav {
-    background-color: #004080;
+    background: #004080;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 22px 28px;
+    flex-wrap: wrap;
+    min-height: 72px;
 }
 
     nav a, .navBtn {
-        color: white;
+        color: #fff;
         text-decoration: none;
-        margin-left: 20px;
-        font-weight: 600;
-        font-size: 18px;
+        margin: 10px 14px;
+        font: 600 20px/1.4 'Segoe UI',sans-serif;
+        padding: 10px 14px;
+        border-radius: 4px;
+        transition: .3s;
+        white-space: nowrap;
     }
 
         nav a:hover, .navBtn:hover {
-            text-decoration: underline;
+            background: rgba(255,255,255,.12)
         }
 
 #authBtn {
-    background-color: #007BFF;
-    padding: 8px 16px;
+    background: #007BFF;
+    padding: 12px 22px;
     border: none;
-    border-radius: 5px;
-    font-weight: bold;
+    border-radius: 6px;
+    font: 600 19px 'Segoe UI',sans-serif;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: .3s;
 }
 
     #authBtn:hover {
-        background-color: #0056b3;
+        background: #0056b3
     }
 
-/* === Page Structure === */
+/* === Title === */
 h1 {
-    text-align: center;
-    color: #333;
+    font-size: clamp(20px,4vw, 32px);
+    margin: 36px 0 24px;
+    padding: 0 16px
 }
 
+/* === Table Container === */
 #userTableContainer {
-    margin-top: 20px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 40px;
+    background: #fff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.1);
+    width: 96%;
+    max-width: 1100px;
+    overflow-x: auto;
 }
 
 /* === Table Styling === */
 table {
     width: 100%;
     border-collapse: collapse;
+    font-size: clamp(20px,4vw, 32px);
+    min-width: 640px
 }
 
 th, td {
     border: 1px solid #ddd;
-    padding: 12px;
+    padding: 24px;
     text-align: left;
+    font-size: clamp(20px,4vw, 32px);
 }
 
 th {
-    background-color: #e9ecef;
-    font-weight: bold;
+    background: #e9ecef;
+    font-weight: 700
 }
 
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background: #f9f9f9
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+    background: #f1f1f1
 }
 
 /* === Data Management Panel === */
 #dataManagementSection {
-    background-color: #e9f7fd;
+    background: #e9f7fd;
     border: 1px solid #b3e0f2;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    text-align: center;
+    padding: 18px;
+    margin: 28px auto;
+    border-radius: 10px;
+    width: 96%;
+    max-width: 1100px;
 }
 
     #dataManagementSection p {
-        margin-top: 0;
-        margin-bottom: 15px;
-        font-size: 0.9em;
-        color: #333;
+        margin: 0 0 15px;
+        font-size: 1.1em
     }
 
     #dataManagementSection code {
-        background-color: #f0f0f0;
-        padding: 2px 4px;
-        border-radius: 3px;
-        font-family: monospace;
+        background: #f0f0f0;
+        padding: 3px 6px;
+        border-radius: 4px
     }
 
 /* === Buttons === */
 .data-buttons button {
-    margin: 0 5px;
-}
-
-#resetToDefaultButton {
-    background-color: #17a2b8;
-}
-
-#clearAllDataButton {
-    background-color: #ffc107;
-    color: #212529;
+    margin: 0 6px
 }
 
 button {
-    padding: 8px 12px;
-    cursor: pointer;
+    padding: 12px 18px;
     border: none;
     border-radius: 4px;
-    color: white;
-    font-weight: bold;
+    color: #fff;
+    font: 600 18px/1 'Segoe UI';
+    cursor: pointer;
+    transition: .3s;
 }
 
-    button.activate {
-        background-color: #28a745;
-    }
+#resetToDefaultButton {
+    background: #17a2b8
+}
 
-    button.deactivate {
-        background-color: #dc3545;
-    }
+#clearAllDataButton {
+    background: #ffc107;
+    color: #212529
+}
 
-    button:hover {
-        opacity: 0.9;
-    }
+button.activate {
+    background: #28a745
+}
+
+button.deactivate {
+    background: #dc3545
+}
+
+button:hover {
+    opacity: .9
+}
 
 /* === Status Tags === */
 .status-active {
     color: #28a745;
-    font-weight: bold;
+    font-weight: 700
 }
 
 .status-inactive {
     color: #dc3545;
-    font-weight: bold;
+    font-weight: 700
 }
 
-/* === Responsive adjustments for table === */
-
-/* Tablet view */
-@media (max-width: 768px) {
-    #userTableContainer {
-        overflow-x: auto; /* Horizontal scroll if needed */
+/* ---------- Tablet (≤768px) ---------- */
+@media(max-width:768px) {
+    body {
+        font-size: 19px
     }
 
-    table {
-        font-size: 14px; /* Smaller font */
+    nav a, .navBtn {
+        font-size: 22px;
+        margin: 8px
+    }
+
+    #authBtn {
+        font-size: 20px
+    }
+
+    table, th, td {
+        font-size: 19px
     }
 
     th, td {
-        padding: 10px; /* Less padding */
+        padding: 26px
+    }
+
+    h1 {
+        font-size: 2.6rem
     }
 }
 
-/* Mobile view */
-@media (max-width: 480px) {
+/* ---------- Mobile (≤480px) ---------- */
+@media(max-width:480px) {
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        font-size: 20px
+    }
+    /* ניווט במוביל – טור אנכי גדול */
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 26px 20px;
+        gap: 14px;
+        min-height: 88px;
+    }
+
+        nav a, .navBtn, #authBtn {
+            font-size: max(24px,6.7vw) !important;
+            padding: 16px 18px;
+            margin: 6px 0;
+            line-height: 1.35;
+            width: 100%;
+            text-align: left;
+        }
+
+    #authBtn {
+        font-size: max(22px,6vw) !important
+    }
+
+    h1 {
+        font-size: max(30px,7.5vw);
+        margin: 26px 0 20px
+    }
+
     #userTableContainer {
-        overflow-x: auto;
+        width: 100%;
+        border-radius: 0;
+        padding: 18px 12px;
+        margin: 0;
     }
 
     table {
-        min-width: 600px; /* Prevent breaking columns */
+        font-size: 20px
     }
 
     th, td {
-        padding: 8px; /* Compact rows */
+        padding: 28px;
+        font-size: 20px
+    }
+
+    button {
+        font-size: 20px;
+        padding: 14px 20px;
+        width: 100%;
+        margin: 8px 0
+    }
+}
+
+/* ---------- Very Small (≤360px) ---------- */
+@media(max-width:360px) {
+    nav a, .navBtn, #authBtn {
+        font-size: 22px !important;
+        padding: 14px
+    }
+
+    button {
+        font-size: 19px
+    }
+
+    th, td {
+        padding: 24px;
+        font-size: 19px
+    }
+
+    h1 {
+        font-size: 28px
+    }
+}
+
+/* === Accessibility & Print === */
+@media(prefers-reduced-motion:reduce) {
+    *, *:before, *:after {
+        animation: none !important;
+        transition: none !important
+    }
+}
+
+nav a:focus, .navBtn:focus, #authBtn:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px
+}
+
+@media print {
+    nav {
+        display: none
+    }
+
+    #userTableContainer {
+        box-shadow: none;
+        border: 1px solid #ccc
     }
 }

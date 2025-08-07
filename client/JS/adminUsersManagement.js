@@ -80,54 +80,45 @@ function handleClearAllData() {
 
 // builds the user table and displays it on screen
 function renderUsers() {
-    const container = document.getElementById('userTableContainer');
-    if (!container) return console.error('User table container not found!');
-    container.innerHTML = ''; // clear previous content
+    // === CHANGED: target the <tbody id="userTableBody"> from new HTML === // NEW-BS
+    const tbody = document.getElementById('userTableBody');
+    if (!tbody) return console.error('tbody#userTableBody not found!');
+    tbody.innerHTML = ''; // clear previous rows
 
     // if no users found, show a message
     if (users.length === 0) {
-        const messageP = document.createElement('p');
-        messageP.innerHTML = "No user data found. Click 'Reset to Default Users' or check your server.";
-        messageP.style.textAlign = 'center';
-        container.appendChild(messageP);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="5" class="text-center py-4">
+            No user data found. Click <strong>Reset to Default</strong> or check the server.</td>`;
+        tbody.appendChild(tr);
         return;
     }
-
-    // create table structure
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-
-    // create header row
-    const headerRow = document.createElement('tr');
-    ['ID', 'Name', 'Email', 'Status', 'Action'].forEach(text => {
-        const th = document.createElement('th');
-        th.textContent = text;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
 
     // create row for each user
     users.forEach(user => {
         const tr = document.createElement('tr');
 
+        // keep the same cell order as before, but use Bootstrap btn classes // NEW-BS
         tr.innerHTML = `
             <td>${user.id}</td>
             <td>${user.name}</td>
             <td>${user.email}</td>
-            <td class="${user.active ? 'status-active' : 'status-inactive'}">${user.active ? 'Active' : 'Inactive'}</td>
-            <td><button class="${user.active ? 'deactivate' : 'activate'}" data-user-id="${user.id}">
-                ${user.active ? 'Deactivate' : 'Activate'}</button></td>
+            <td class="${user.active ? 'text-success fw-semibold' : 'text-danger fw-semibold'}">
+                ${user.active ? 'Active' : 'Inactive'}
+            </td>
+            <td>
+                <button
+                    class="btn btn-sm ${user.active ? 'btn-danger' : 'btn-success'}"
+                    data-user-id="${user.id}">
+                    ${user.active ? 'Deactivate' : 'Activate'}
+                </button>
+            </td>
         `;
         tbody.appendChild(tr);
     });
 
-    table.appendChild(tbody);
-    container.appendChild(table);
-
-    // attach click event to the table buttons
-    table.addEventListener('click', handleTableClick);
+    // attach click handler to all buttons (using delegation on <tbody>)
+    tbody.addEventListener('click', handleTableClick);
 }
 
 // handles click events on buttons inside the user table
@@ -140,6 +131,10 @@ function handleTableClick(event) {
 // initializes the page on load
 function init() {
     loadUsers(); // fetch and display users
+
+    // attach global handlers for the reset / clear buttons if present
+    document.getElementById('resetToDefaultButton')?.addEventListener('click', handleResetToDefault);
+    document.getElementById('clearAllDataButton')?.addEventListener('click', handleClearAllData);
 }
 
 // wait for DOM to fully load before starting
