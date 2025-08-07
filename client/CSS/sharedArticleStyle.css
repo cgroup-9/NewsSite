@@ -5,12 +5,13 @@ body {
     margin: 0;
     padding: 0;
     color: #333;
+    font-size: clamp(15px, 3vw, 20px);
 }
 
 h1 {
     text-align: center;
     margin-top: 30px;
-    font-size: 2.2rem;
+    font-size: clamp(22px, 5vw, 36px);
     color: #004080;
 }
 
@@ -21,17 +22,20 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
+    flex-wrap: wrap;
 }
 
-    nav a, .navBtn {
+    nav a,
+    .navBtn {
         color: white;
         text-decoration: none;
         margin-left: 20px;
         font-weight: 600;
-        font-size: 18px;
+        font-size: clamp(14px, 3vw, 22px);
     }
 
-        nav a:hover, .navBtn:hover {
+        nav a:hover,
+        .navBtn:hover {
             text-decoration: underline;
         }
 
@@ -42,6 +46,7 @@ nav {
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
+    font-size: clamp(14px, 2.2vw, 20px);
 }
 
     #authBtn:hover {
@@ -49,10 +54,10 @@ nav {
     }
 
 /* === Filter Button === */
-
-#divBtnHideUser{
-    text-align:center;
+#divBtnHideUser {
+    text-align: center;
 }
+
 #openFilterModalBtn {
     display: inline-block;
     margin: 20px auto;
@@ -60,7 +65,7 @@ nav {
     color: #004080;
     border: 1px solid #ccc;
     padding: 10px 16px;
-    font-size: 16px;
+    font-size: clamp(14px, 2vw, 18px);
     font-weight: bold;
     border-radius: 6px;
     cursor: pointer;
@@ -87,16 +92,19 @@ nav {
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     text-align: right;
 }
-    .modal-content h2{
-        text-align:center;
+
+    .modal-content h2 {
+        text-align: center;
+        font-size: clamp(20px, 4vw, 30px);
     }
-    .closeBtn {
-        float: left;
-        font-size: 24px;
-        font-weight: bold;
-        color: #888;
-        cursor: pointer;
-    }
+
+.closeBtn {
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+}
 
     .closeBtn:hover {
         color: #000;
@@ -113,7 +121,7 @@ nav {
 }
 
     .user-list label {
-        font-size: 16px;
+        font-size: clamp(14px, 2vw, 18px);
         display: flex;
         align-items: center;
         gap: 10px;
@@ -133,6 +141,7 @@ nav {
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
+    font-size: clamp(14px, 2vw, 18px);
 }
 
     #applyUserFilterBtn:hover {
@@ -167,7 +176,7 @@ nav {
 
 .userName {
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: clamp(16px, 2.5vw, 22px);
     color: #004080;
 }
 
@@ -177,6 +186,7 @@ nav {
     background-color: #f0f4ff;
     padding: 10px 12px;
     border-radius: 8px;
+    font-size: clamp(14px, 2vw, 18px);
 }
 
 .articleImage {
@@ -187,8 +197,8 @@ nav {
 }
 
 .articleInfo {
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: clamp(14px, 1.8vw, 18px);
+    line-height: 1.6;
 }
 
     .articleInfo a {
@@ -200,8 +210,8 @@ nav {
         .articleInfo a:hover {
             text-decoration: underline;
         }
-/* === Pagination === */
 
+/* === Pagination === */
 #paginationContainer {
     text-align: center;
     padding: 20px;
@@ -215,6 +225,7 @@ nav {
     background: white;
     font-weight: bold;
     cursor: pointer;
+    font-size: clamp(12px, 1.8vw, 16px);
 }
 
     .paginationBtn.activePage {
@@ -228,73 +239,46 @@ nav {
         color: #777;
     }
 
-/* === Responsive === */
-/* === Responsive Enhancements === */
-
-/* Tablet adjustments */
+/* === Responsive: Extra Enhancements === */
 @media screen and (max-width: 768px) {
-    nav {
-        flex-direction: column; /* Stack navbar links */
-        padding: 10px;
-    }
-
-        nav a, .navBtn {
-            font-size: 16px;
-            margin: 5px 0;
-        }
-
-    h1 {
-        font-size: 1.8rem;
-        margin-top: 20px;
-    }
-
     .sharedArticleCard {
-        width: 95%; /* Full width on smaller tablets */
+        width: 90%;
     }
 
     .modal-content {
         width: 90%;
-        padding: 15px;
     }
-}
 
-/* Mobile adjustments */
-@media screen and (max-width: 480px) {
     nav {
-        padding: 8px;
-    }
-
-        nav a, .navBtn {
-            font-size: 14px;
-            margin: 4px 0;
-        }
-
-    h1 {
-        font-size: 1.5rem;
-    }
-
-    .sharedArticleCard {
-        width: 100%; /* Full width on mobile */
+        flex-direction: column;
+        align-items: stretch;
         padding: 10px;
     }
 
-    .comment {
-        font-size: 0.9rem;
-        padding: 8px;
-    }
+        nav a,
+        .navBtn {
+            margin: 5px 0;
+        }
+}
 
-    .articleInfo {
-        font-size: 0.9rem;
+@media screen and (max-width: 480px) {
+    .sharedArticleCard {
+        width: 100%;
+        padding: 14px;
     }
 
     .modal-content {
         width: 95%;
-        padding: 10px;
+        padding: 12px;
+    }
+
+    #openFilterModalBtn,
+    #applyUserFilterBtn {
+        width: 100%;
+        padding: 12px;
     }
 
     .paginationBtn {
-        padding: 6px 10px;
-        font-size: 0.85rem;
+        padding: 8px;
     }
 }
-

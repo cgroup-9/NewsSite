@@ -1,5 +1,4 @@
 ﻿/* ========== General Styles ========== */
-/* Center page with flexbox and clean background */
 body {
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
@@ -9,29 +8,28 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    font-size: clamp(15px, 2.5vw, 17px);
 }
 
 /* ========== Login Container ========== */
-/* Main box for login form */
 #loginContainer {
     background-color: white;
     padding: 40px 30px;
     border-radius: 10px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: clamp(280px, 80vw, 360px);
     text-align: center;
 }
 
 /* ========== Headings ========== */
 h2 {
     margin-bottom: 20px;
-    font-size: 1.6rem;
+    font-size: clamp(20px, 4vw, 26px);
     color: #004080;
     font-weight: 500;
 }
 
 /* ========== Login Form ========== */
-/* Arrange form fields vertically */
 form {
     display: flex;
     flex-direction: column;
@@ -43,7 +41,7 @@ input[type="password"] {
     color: #2c3e50;
     border: 1px solid #ccc;
     padding: 10px;
-    font-size: 16px;
+    font-size: clamp(14px, 2vw, 16px);
     border-radius: 6px;
     margin-bottom: 15px;
 }
@@ -54,7 +52,7 @@ button {
     color: white;
     border: none;
     padding: 10px;
-    font-size: 16px;
+    font-size: clamp(15px, 2vw, 17px);
     border-radius: 6px;
     cursor: pointer;
     margin-top: 10px;
@@ -70,6 +68,7 @@ a {
     margin-top: 15px;
     color: #2980b9;
     text-decoration: none;
+    font-size: clamp(14px, 2vw, 16px);
 }
 
     a:hover {
@@ -77,10 +76,9 @@ a {
     }
 
 /* ========== Responsive Design ========== */
-/* Adjust login box for mobile view */
 @media (max-width: 500px) {
     #loginContainer {
-        width: 90%;
+        width: 95%;
         padding: 30px 20px;
     }
 }
