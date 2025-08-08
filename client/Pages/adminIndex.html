@@ -1,64 +1,87 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <!-- UTF-8 encoding to support all languages and special characters -->
     <meta charset="UTF-8">
+
+    <!-- Ensures the layout is responsive and adapts to different screen sizes -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Dashboard</title>
+
+    <title>Admin Dashboard</title> <!-- Title displayed in the browser tab -->
+    <!-- jQuery library for DOM manipulation and AJAX calls -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+
+    <!-- Chart.js library for creating charts and data visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JavaScript for authentication handling (login/logout state) -->
     <script src="../JS/auth.js"></script>
+
+    <!-- Centralized AJAX request functions -->
     <script src="../JS/ajaxCall.js"></script>
 
+    <!-- CSS for styling the Admin Dashboard page -->
     <link href="../CSS/adminIndexStyle.css" rel="stylesheet" />
 
+    <!-- Font Awesome icon library -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- CSS for navigation bar styling -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
 
+    <!-- JavaScript for loading dashboard statistics and charts -->
     <script src="../JS/adminIndex.js"></script>
 </head>
 <body>
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
     <nav class="mainNav" id="mainNav">
+        <!-- Navigation links for the admin panel -->
         <a href="adminIndex.html" class="navItem logo">Board</a>
         <a href="adminUsersManagement.html" class="navItem">Users List</a>
         <a href="adminReportedComments.html" class="navItem">Reported Comments</a>
         <a href="adminAiQuestions.html" class="navItem">AI Chat</a>
         <a href="advancedFeatures.html" class="navItem">Advanced Features</a>
+
+        <!-- Login/Logout button (text changes dynamically based on authentication status) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
 
-        <!-- hamburger -->
+        <!-- Hamburger menu for mobile navigation -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 bars = hamburger icon -->
         </button>
     </nav>
 
-
-
-
-
+    <!-- PAGE TITLE -->
     <h1 class="title">📊 Daily Usage Statistics</h1>
 
+    <!-- DASHBOARD CARDS -->
+    <!-- Summary cards showing quick statistics -->
     <div class="cards">
         <div class="card">
             <h3>👤 Logins</h3>
-            <p id="loginCount">-</p>
+            <p id="loginCount">-</p> <!-- Filled dynamically with today's login count -->
         </div>
         <div class="card">
             <h3>📰 API Fetches</h3>
-            <p id="apiFetchCount">-</p>
+            <p id="apiFetchCount">-</p> <!-- Filled dynamically with number of API requests -->
         </div>
         <div class="card">
             <h3>💾 Articles Saved</h3>
-            <p id="savedCount">-</p>
+            <p id="savedCount">-</p> <!-- Filled dynamically with saved articles count -->
         </div>
     </div>
+
+    <!-- CHART SECTION -->
+    <!-- Displays a visual chart of the collected statistics -->
     <div class="statsChartdiv">
         <canvas id="statsChart" width="400" height="150"></canvas>
-
+        <!-- Chart.js will draw a graph inside this <canvas> -->
     </div>
+
+    <!-- Navigation bar script -->
     <script src="../JS/nav.js" defer></script>
 </body>
 </html>

@@ -1,17 +1,25 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <!-- Sets the document type to HTML5 -->
+    <meta charset="utf-8" /> <!-- Ensures the page supports all languages and special characters -->
+    <!-- Makes the page responsive to different screen sizes (especially for mobile devices) -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title></title>
 
-    <script src="../JS/register.js"></script>
-    <script src="../JS/ajaxCall.js"></script>
+    <!-- Importing jQuery library (v3.6.0) from a CDN.
+         This is used for easier DOM manipulation, event handling, and AJAX calls -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title></title> <!-- The title for the browser tab (currently empty) -->
+    <!-- JavaScript files -->
+    <script src="../JS/register.js"></script> <!-- Handles registration form logic and user input -->
+    <script src="../JS/ajaxCall.js"></script> <!-- Contains reusable AJAX request functions -->
+    <!-- CSS file for styling the registration page -->
     <link href="../CSS/registerStyle.css" rel="stylesheet" />
 </head>
 <body>
+    <!-- This container will hold the registration form or its content.
+         It is intentionally empty here because it will be dynamically created/filled by register.js -->
     <div id="registerContainer"></div>
-   
 </body>
 </html>

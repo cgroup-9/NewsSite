@@ -1,68 +1,103 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <!-- Sets HTML document to UTF-8 encoding (supports Hebrew, emojis, etc.) -->
     <meta charset="utf-8" />
+
+    <!-- Makes the page responsive (adjusts to screen size, important for mobile) -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Articles</title>
+
+    <title>My Articles</title> <!-- Browser tab title -->
+    <!-- jQuery library from CDN for DOM manipulation and AJAX -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+
+    <!-- Page-specific styles -->
     <link href="../CSS/myArticleStyle.css" rel="stylesheet" />
-    <script src="../JS/pagination.js"></script>
-    <script src="../JS/ajaxCall.js"></script>
-    <script src="../JS/auth.js"></script>
+
+    <!-- JavaScript utilities -->
+    <script src="../JS/pagination.js"></script> <!-- Handles pagination UI and logic -->
+    <script src="../JS/ajaxCall.js"></script> <!-- Centralized AJAX functions for API requests -->
+    <script src="../JS/auth.js"></script> <!-- Authentication handling (login/logout) -->
+    <!-- Icons library -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Navigation bar styling -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
+    <!-- Top navigation with links to other pages -->
     <nav class="mainNav" id="mainNav">
         <a href="index.html" class="navItem logo">Home</a>
         <a href="myArticle.html" class="navItem">My Saved Article</a>
         <a href="sharedArticles.html" class="navItem">Shared Articles</a>
         <a href="editMyProfile.html" class="navItem">Edit My Profile</a>
+
+        <!-- Login/Logout button (text changes dynamically depending on auth state) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
-        <!-- hamburger -->
+
+        <!-- Hamburger icon for mobile navigation menu -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 lines = hamburger icon -->
         </button>
     </nav>
 
+    <!-- Page title -->
     <h2 class="fullRowTitle">My Articles</h2>
 
-    <!-- 🔍 Search Section -->
+    <!-- 🔍 SEARCH SECTION -->
+    <!-- Search box for filtering articles by title or author -->
     <div id="searchContainer">
         <input type="text" id="searchInput" placeholder="Search by title or author..." />
         <button id="searchBtn" class="filterBtn">Search</button>
     </div>
 
-    <!-- Filter by Categories -->
+    <!-- FILTER BY CATEGORIES -->
+    <!-- Section where user can filter articles by category -->
     <div id="filterContainer">
         <h3>Filter by Categories</h3>
+
+        <!-- Scrollable container for dynamically loaded category checkboxes -->
         <div class="checkbox-scroll" id="categoryFilters">
-            <!-- Will be filled dynamically from fetched categories -->
+            <!-- Will be filled dynamically from fetched categories in JS -->
         </div>
+
+        <!-- Button to apply selected filters -->
         <button id="applyFilterBtn" class="filterBtn">Filter</button>
     </div>
 
-    <!-- Articles List -->
+    <!-- ARTICLES LIST -->
+    <!-- Container where user's saved articles will be displayed -->
     <div id="myArticleContainer"></div>
 
-    <!-- Pagination -->
+    <!-- PAGINATION -->
+    <!-- Controls for navigating between multiple pages of articles -->
     <div id="paginationContainer"></div>
 
-    <!-- Modal for sharing an article -->
+    <!-- SHARE MODAL -->
+    <!-- Popup for sharing an article -->
     <div id="shareModal" class="modal" style="display:none;">
         <div class="modal-content">
+            <!-- Close modal button (X) -->
             <span class="close">&times;</span>
             <h3>📤 Share Article</h3>
+
+            <!-- Text area for user to write a comment about the article -->
             <textarea id="shareComment" placeholder="Write your comment here..."></textarea>
             <br>
+
+            <!-- Button to confirm and send the share action -->
             <button id="confirmShareBtn">Share</button>
         </div>
     </div>
+
+    <!-- Navigation script (handles mobile menu toggle, etc.) -->
     <script src="../JS/nav.js" defer></script>
+
+    <!-- Page-specific JS (fetches articles, handles search/filter/share) -->
     <script src="../JS/myArticle.js"></script>
 </body>
 </html>

@@ -1,35 +1,38 @@
-﻿// ===== env (same pattern as other pages) =====
+﻿// ===== Detect environment (same pattern as other pages) =====
 function isDevEnv() {
-    return location.host.includes("localhost");
+    return location.host.includes("localhost"); // True if running on localhost
 }
+
 const port = 7019;
 const baseApiUrl = isDevEnv()
-    ? `https://localhost:${port}`
-    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
-// const baseUrl = `${baseApiUrl}/api/...`; // use if needed later
+    ? `https://localhost:${port}` // Local API URL
+    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1"; // Deployed API URL
+// const baseUrl = `${baseApiUrl}/api/...`; // Uncomment if this page calls an API later
 
-// ===== page-only auth behavior (no duplication of helpers) =====
+// ===== Page-specific auth override (no duplication of global helpers) =====
 (function allowAdminOnThisPageOnly() {
-    // Override the global requireLogin that auth.js will call on DOMContentLoaded.
-    // We rely on auth.js's getCurrentUser() that already exists.
+    // This replaces the global requireLogin from auth.js
+    // so we can customize rules for this page.
+
     window.requireLogin = function () {
+        // Use the global getCurrentUser() if it exists
         const user = (typeof getCurrentUser === "function") ? getCurrentUser() : null;
 
-        // Not logged in -> go to login (same behavior as global)
+        // If not logged in → send to login page
         if (!user) {
             location.href = "login.html";
             return;
         }
 
-        // Keep the SAME admin check as in auth.js (by name)
+        // Determine if user is admin (by name, case-insensitive)
         const isAdmin = user.name && user.name.toLowerCase() === "admin";
 
         if (isAdmin) {
-            // Admin is allowed to stay on AdvancedFeatures; do nothing.
+            // Admin is allowed → stay on this page
             return;
         }
 
-        // Non-admin users shouldn't view this admin page
+        // If not admin → redirect to home
         location.href = "index.html";
     };
 })();

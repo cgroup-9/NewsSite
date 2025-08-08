@@ -1,38 +1,63 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <!-- UTF-8 encoding to support all characters, including Hebrew and emojis -->
     <meta charset="utf-8" />
+
+    <!-- Ensures the layout adapts to different device sizes (mobile-friendly) -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reported Comments Admin Panel</title>
+
+    <title>Reported Comments Admin Panel</title> <!-- Browser tab title -->
+    <!-- jQuery library for DOM manipulation and AJAX calls -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+
+    <!-- JavaScript for handling authentication (login/logout state) -->
     <script src="../JS/auth.js"></script>
+
+    <!-- JavaScript with reusable AJAX functions -->
     <script src="../JS/ajaxCall.js"></script>
+
+    <!-- CSS styling for the reported comments admin page -->
     <link href="../CSS/adminReportedCommentsStyle.css" rel="stylesheet" />
+
+    <!-- Font Awesome icon library -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- CSS styling for the navigation bar -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
     <nav class="mainNav" id="mainNav">
+        <!-- Navigation links for admin pages -->
         <a href="adminIndex.html" class="navItem logo">Board</a>
         <a href="adminUsersManagement.html" class="navItem">Users List</a>
         <a href="adminReportedComments.html" class="navItem">Reported Comments</a>
         <a href="adminAiQuestions.html" class="navItem">AI Chat</a>
         <a href="advancedFeatures.html" class="navItem">Advanced Features</a>
+
+        <!-- Login/Logout button (text changes dynamically based on login state) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
 
-        <!-- hamburger -->
+        <!-- Hamburger menu button for mobile navigation -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 bars represent the hamburger icon -->
         </button>
     </nav>
 
+    <!-- Main heading for the page -->
     <h2>Reported Shared Comments</h2>
+
+    <!-- Container where the reported comments table will be dynamically loaded -->
     <div id="reportsTableContainer"></div>
+
+    <!-- JavaScript for navigation menu behavior -->
     <script src="../JS/nav.js" defer></script>
+
+    <!-- JavaScript for fetching, displaying, and managing reported comments -->
     <script src="../JS/adminReportedComments.js"></script>
 </body>
 </html>

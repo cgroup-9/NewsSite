@@ -1,63 +1,70 @@
 ﻿function isDevEnv() {
+    // Check if the app is running locally by looking for "localhost" in the URL
     return location.host.includes("localhost");
 }
 
+// Define API base URL depending on environment (local or production)
 const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 const baseUrl = `${baseApiUrl}/api/SavedArticle`;
 
-let articles = [];
-let currentPage = 1;
-const pageSize = 20;
-let selectedCategories = [];
-let searchTerm = "";
+// Global state variables
+let articles = [];              // Store loaded articles from the server
+let currentPage = 1;            // Current page for pagination
+const pageSize = 20;            // Number of articles per page
+let selectedCategories = [];    // Categories selected for filtering
+let searchTerm = "";            // Search term for filtering
 
 $(document).ready(() => {
-    const divArticles = $("#myArticleContainer");
-    const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const divArticles = $("#myArticleContainer"); // Container where articles will be rendered
+    const currentUser = JSON.parse(sessionStorage.getItem("currentUser")); // Logged-in user info
 
-    loadArticles();
+    loadArticles(); // Load articles when page is ready
 
-    // Load saved articles from server with pagination
+    // Load saved articles from server with pagination and filters
     function loadArticles() {
-        const categoryParam = selectedCategories.join(",");
-        const searchParam = searchTerm ? `&searchTerm=${encodeURIComponent(searchTerm)}` : "";
+        const categoryParam = selectedCategories.join(","); // Selected categories as CSV
+        const searchParam = searchTerm ? `&searchTerm=${encodeURIComponent(searchTerm)}` : ""; // Add search if exists
 
+        // Send GET request to fetch paginated saved articles for the logged-in user
         ajaxCall("GET",
             `${baseUrl}/${currentUser.id}?page=${currentPage}&pageSize=${pageSize}&categories=${categoryParam}${searchParam}`,
             null,
             res => {
-                articles = res;
-                renderCategoryFilters();
-                renderArticles();
+                articles = res; // Save articles locally
+                renderCategoryFilters(); // Show category checkboxes
+                renderArticles(); // Show article cards
 
-                const hasNextPage = res.length === pageSize;
+                const hasNextPage = res.length === pageSize; // True if more pages exist
                 renderPagination(currentPage, hasNextPage, function (nextPage) {
                     currentPage = nextPage;
-                    loadArticles();
+                    loadArticles(); // Load the next page
                 });
             },
             err => alert("Failed to load paged articles: " + (err.responseText || err.statusText))
         );
     }
 
-    // Render articles
+    // Display articles in the page
     function renderArticles() {
-        divArticles.empty();
+        divArticles.empty(); // Clear old content
 
+        // Filter by selected categories
         const filtered = articles.filter(a => {
             return (
                 (selectedCategories.length === 0 || selectedCategories.includes(a.category))
             );
         });
 
+        // Show "no results" message if nothing matches
         if (filtered.length === 0) {
             divArticles.append(`<p class="noResults">📭 No articles found matching your filters.</p>`);
             return;
         }
 
+        // Create HTML for each article
         for (let a of filtered) {
             const cardHtml = `
                 <div class="articleCard">
@@ -78,12 +85,13 @@ $(document).ready(() => {
         }
     }
 
-    // Render category checkboxes
+    // Show category filter checkboxes based on loaded articles
     function renderCategoryFilters() {
-        const allCategories = [...new Set(articles.map(a => a.category))].filter(Boolean);
+        const allCategories = [...new Set(articles.map(a => a.category))].filter(Boolean); // Unique non-empty categories
         const categoryDiv = $("#categoryFilters");
         categoryDiv.empty();
 
+        // Build checkbox HTML for each category
         const categoryHtml = allCategories.map(cat => `
             <label>
                 <input type="checkbox" class="categoryCheckbox" value="${cat}" checked /> ${cat}
@@ -92,14 +100,14 @@ $(document).ready(() => {
         categoryDiv.append(categoryHtml);
     }
 
-    // Category selection
+    // Track changes in category checkboxes
     $(document).on("change", ".categoryCheckbox", function () {
         selectedCategories = $(".categoryCheckbox:checked").map(function () {
             return this.value;
         }).get();
     });
 
-    // Apply filter button
+    // Apply filters and reload articles
     $(document).on("click", "#applyFilterBtn", function () {
         selectedCategories = $(".categoryCheckbox:checked").map(function () {
             return this.value;
@@ -108,59 +116,65 @@ $(document).ready(() => {
         loadArticles();
     });
 
-    // Pagination
+    // Render pagination buttons
     function renderPagination(currentPage, hasNextPage, onPageClick) {
         const paginationContainer = $("#paginationContainer");
         paginationContainer.empty();
 
+        // Show "Prev" button if not on first page
         if (currentPage > 1) {
             paginationContainer.append(`<button class="paginationBtn" data-page="${currentPage - 1}">⬅️ Prev</button>`);
         }
 
+        // Show current page button
         paginationContainer.append(`<button class="paginationBtn activePage" data-page="${currentPage}">${currentPage}</button>`);
 
+        // Show "Next" button if more pages exist
         if (hasNextPage) {
             paginationContainer.append(`<button class="paginationBtn" data-page="${currentPage + 1}">Next ➡️</button>`);
         }
 
+        // Handle pagination button clicks
         $(".paginationBtn").click(function () {
             const page = $(this).data("page");
             onPageClick(page);
         });
     }
 
-    // Remove article
+    // Remove saved article from server
     $(document).on("click", ".removeArticleBtn", function () {
         const user = JSON.parse(sessionStorage.getItem("currentUser"));
         if (!user) return alert("❌ You must be logged in.");
 
         const articleUrl = $(this).data("articleurl");
-
         const deleteRequest = { userId: user.id, articleUrl: articleUrl };
 
         ajaxCall("DELETE", `${baseApiUrl}/api/savedarticle`, JSON.stringify(deleteRequest),
             res => {
                 alert("🗑️ " + res.message);
-                loadArticles();
+                loadArticles(); // Refresh article list
             },
             err => alert("❌ Failed to delete article: " + (err.responseJSON?.message || err.statusText))
         );
     });
 
-    // Share modal
+    // Share article modal - track which article is being shared
     let currentShareArticleUrl = null;
 
+    // Open share modal
     $(document).on("click", ".shareArticleBtn", function () {
         currentShareArticleUrl = $(this).data("articleurl");
-        $("#shareComment").val("");
+        $("#shareComment").val(""); // Clear comment field
         $("#shareModal").show();
     });
 
+    // Close share modal
     $(document).on("click", ".close", function () {
         $("#shareModal").hide();
         currentShareArticleUrl = null;
     });
 
+    // Confirm sharing an article
     $("#confirmShareBtn").click(() => {
         const user = JSON.parse(sessionStorage.getItem("currentUser"));
         const comment = $("#shareComment").val().trim();
@@ -179,10 +193,10 @@ $(document).ready(() => {
         );
     });
 
-    // Search
+    // Search for articles by keyword
     $(document).on("click", "#searchBtn", function () {
         searchTerm = $("#searchInput").val().trim();
         currentPage = 1;
-        loadArticles();
+        loadArticles(); // Reload with search filter
     });
 });

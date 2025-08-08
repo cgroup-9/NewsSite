@@ -1,34 +1,51 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- UTF-8 encoding supports all characters, including special symbols and emojis -->
     <meta charset="UTF-8">
+
+    <!-- Makes the page responsive on mobile and other devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Functionality</title>
+
+    <title>Advanced Functionality</title> <!-- Title in the browser tab -->
+    <!-- Font Awesome library for icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Navigation bar styling -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
+
+    <!-- JavaScript for authentication (login/logout state management) -->
     <script src="../JS/auth.js"></script>
+
+    <!-- General page styling (reuses index page style) -->
     <link href="../CSS/indexStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
     <nav class="mainNav" id="mainNav">
+        <!-- Admin navigation links -->
         <a href="adminIndex.html" class="navItem logo">Board</a>
         <a href="adminUsersManagement.html" class="navItem">Users List</a>
         <a href="adminReportedComments.html" class="navItem">Reported Comments</a>
         <a href="adminAiQuestions.html" class="navItem">AI Chat</a>
         <a href="advancedFeatures.html" class="navItem">Advanced Features</a>
+
+        <!-- Login/Logout button (text changes dynamically) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
 
-        <!-- hamburger -->
+        <!-- Hamburger menu button for small/mobile screens -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 lines = hamburger icon -->
         </button>
     </nav>
 
+    <!-- Page main heading -->
     <h1 class="fullRowTitle">Advanced Functionality</h1>
 
+    <!-- MAIN CONTENT SECTION -->
     <section id="newsContainer">
+        <!-- Article card describing AI Assistant Chat -->
         <div class="articleCard">
             <h2>AI Assistant Chat</h2>
             <p>
@@ -38,6 +55,7 @@
             </p>
         </div>
 
+        <!-- Article card describing Likes on Shared Articles -->
         <div class="articleCard">
             <h2>Likes on Shared Articles</h2>
             <p>
@@ -47,7 +65,11 @@
             </p>
         </div>
     </section>
+
+    <!-- JavaScript for navigation bar behavior (mobile toggle, etc.) -->
     <script src="../JS/nav.js" defer></script>
+
+    <!-- JavaScript for any additional page-specific logic -->
     <script src="../JS/advancedFeatures.js"></script>
 </body>
 </html>

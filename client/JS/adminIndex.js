@@ -1,48 +1,56 @@
-﻿// When the page finishes loading
+﻿// === Run when page finishes loading ===
 document.addEventListener("DOMContentLoaded", () => {
-    requireLogin();         // Ensure user is logged in
-    updateAuthButton();     // Update login/logout button
-    loadAdminStats();       // Load and display admin statistics
+    requireLogin();     // 1️⃣ Check if the user is logged in — if not, redirect to login page.
+    updateAuthButton(); // 2️⃣ Set the top-right auth button text/action (Login or Logout).
+    loadAdminStats();   // 3️⃣ Fetch today's statistics from the server and display them.
 });
-// checks if we're running in local development environment
+
+// === Detect environment ===
+// Returns true if running locally (localhost), otherwise false.
 function isDevEnv() {
     return location.host.includes("localhost");
 }
 
-// sets the base API URL depending on the environment
+// === Set base API URL depending on environment ===
+// Localhost → use local port for API calls.
+// Deployed → use hosted project path.
 const port = 7019;
 const baseApiUrl = isDevEnv()
     ? `https://localhost:${port}`
     : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
+
+// Base URL for user-related API endpoints.
 const baseUrl = `${baseApiUrl}/api/Users`;
-// Fetches admin statistics from the server and displays them
+
+// === Fetch admin statistics from the server and display ===
 function loadAdminStats() {
+    // 1️⃣ Send GET request to fetch today's usage stats
     fetch(`${baseUrl}/stats`)
         .then(response => {
-            if (!response.ok) throw new Error("Failed to fetch"); // Handle failed request
-            return response.json(); // Parse JSON response
+            // Check for network/HTTP errors
+            if (!response.ok) throw new Error("Failed to fetch");
+            return response.json(); // Parse JSON body
         })
         .then(stats => {
-            // === Update HTML elements with numeric stats ===
+            // 2️⃣ Update numeric counters in the HTML
             document.getElementById("loginCount").textContent = stats.loginCounter;
             document.getElementById("apiFetchCount").textContent = stats.apiFetchCounter;
             document.getElementById("savedCount").textContent = stats.savedNewsCounter;
 
-            // === Create a bar chart using Chart.js ===
-            // This is not an HTML <table> — it's a visual chart rendered inside a <canvas> element.
+            // 3️⃣ Draw a bar chart with Chart.js
             const ctx = document.getElementById('statsChart').getContext('2d');
             new Chart(ctx, {
-                type: 'bar', // Bar chart type
+                type: 'bar', // Bar chart visualization
                 data: {
                     labels: ['Logins', 'API Fetches', 'Articles Saved'], // X-axis labels
                     datasets: [{
-                        label: `Usage on ${stats.date}`, // Dataset title (shown above the chart)
+                        label: `Usage on ${stats.date}`, // Chart title (legend)
                         data: [
-                            stats.loginCounter,         // Height of 'Logins' bar
-                            stats.apiFetchCounter,      // Height of 'API Fetches' bar
-                            stats.savedNewsCounter      // Height of 'Articles Saved' bar
+                            stats.loginCounter,    // Number of logins today
+                            stats.apiFetchCounter, // Number of API calls today
+                            stats.savedNewsCounter // Number of saved articles today
                         ],
-                        borderWidth: 1 // Thickness of bar borders
+                        borderWidth: 1 // Border around each bar
                     }]
                 },
                 options: {
@@ -50,7 +58,7 @@ function loadAdminStats() {
                         y: {
                             beginAtZero: true, // Start Y-axis at 0
                             ticks: {
-                                precision: 0   // Force integer values on Y-axis
+                                precision: 0   // Show whole numbers only
                             }
                         }
                     }
@@ -58,6 +66,7 @@ function loadAdminStats() {
             });
         })
         .catch(err => {
+            // 4️⃣ Handle failure gracefully
             console.error("❌ Failed to load admin stats", err);
             alert("Failed to load admin stats");
         });

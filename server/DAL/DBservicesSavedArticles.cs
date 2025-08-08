@@ -8,7 +8,11 @@ namespace server.DAL
 {
     public class DBservicesSavedArticles
     {
-        // Establishes a connection to the database using the connection string from appsettings.json
+        // ==========================
+        // Connects to SQL Server
+        // ==========================
+        // Reads the connection string "myProjDB" from appsettings.json
+        // Creates and opens a SqlConnection, then returns it
         public SqlConnection connect(string conString)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -20,14 +24,21 @@ namespace server.DAL
             return con;
         }
 
-        // Builds a SqlCommand for a stored procedure with optional parameters
+        // ==========================
+        // Creates a SqlCommand for a Stored Procedure
+        // ==========================
+        // spName   → stored procedure name
+        // con      → open SqlConnection
+        // paramDic → dictionary of parameters (name → value)
+        // Sets the CommandType to StoredProcedure
+        // Adds each parameter from paramDic to the SqlCommand
         private SqlCommand CreateCommandWithStoredProcedureGeneral(string spName, SqlConnection con, Dictionary<string, object> paramDic)
         {
             SqlCommand cmd = new SqlCommand()
             {
                 Connection = con,
                 CommandText = spName,
-                CommandTimeout = 10,
+                CommandTimeout = 10, // seconds before timing out
                 CommandType = CommandType.StoredProcedure
             };
 
@@ -42,7 +53,13 @@ namespace server.DAL
             return cmd;
         }
 
-        // Saves an article using SP_SaveArticle_FP
+        // ==========================
+        // Saves an article to the DB
+        // ==========================
+        // Uses stored procedure: SP_SaveArticle_FP
+        // Parameters include userId, URL, title, description, image URL, author, date, content, category
+        // Also defines a RETURN VALUE parameter to get result code from DB
+        // Common results: 1 = success, 0 = already saved
         public int SaveArticle(SaveArticleRequest save)
         {
             SqlConnection con;
@@ -54,9 +71,10 @@ namespace server.DAL
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ex; // If connection fails, throw error to caller
             }
 
+            // Prepare parameters for stored procedure
             Dictionary<string, object> paramDic = new Dictionary<string, object>
             {
                 { "@userId", save.UserId },
@@ -72,27 +90,33 @@ namespace server.DAL
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_SaveArticle_FP", con, paramDic);
 
+            // Add return value parameter
             SqlParameter returnParameter = new SqlParameter();
             returnParameter.Direction = ParameterDirection.ReturnValue;
             cmd.Parameters.Add(returnParameter);
 
             try
             {
-                cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery(); // Run the stored procedure
                 int result = (int)returnParameter.Value;
                 return result;
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 throw;
             }
             finally
             {
-                con.Close();
+                con.Close(); // Always close connection
             }
         }
 
-        // Deletes a saved article using SP_DeleteSavedArticle_FP
+        // ==========================
+        // Deletes a saved article
+        // ==========================
+        // Uses stored procedure: SP_DeleteSavedArticle_FP
+        // Takes userId and articleUrl as parameters
+        // Also uses RETURN VALUE parameter to indicate result (1 = deleted, 0 = not found)
         public int DeleteSavedArticle(int userId, string articleUrl)
         {
             SqlConnection con;
@@ -110,7 +134,7 @@ namespace server.DAL
             Dictionary<string, object> paramDic = new Dictionary<string, object>
             {
                 { "@userId", userId },
-                { "@articleUrl", articleUrl ?? "" } // fallback to empty string if null
+                { "@articleUrl", articleUrl ?? "" } // Fallback to empty string if null
             };
 
             cmd = CreateCommandWithStoredProcedureGeneral("SP_DeleteSavedArticle_FP", con, paramDic);
@@ -125,7 +149,7 @@ namespace server.DAL
                 int result = (int)returnParameter.Value;
                 return result;
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 throw;
             }
@@ -135,24 +159,33 @@ namespace server.DAL
             }
         }
 
-        // Gets all saved articles for a specific user, optionally filtered by category
+        // ==========================
+        // Retrieves saved articles
+        // ==========================
+        // Uses stored procedure: SP_GetSavedArticles_FP
+        // Supports:
+        // - Pagination (page, pageSize)
+        // - Filtering by categories
+        // - Searching by title/content
         public List<SaveArticleRequest> GetSavedArticles(
-    int userId, int page, int pageSize, string? categories = null, string? searchTerm = null)
+            int userId, int page, int pageSize, string? categories = null, string? searchTerm = null)
         {
             using var con = connect("myProjDB");
 
             var paramDic = new Dictionary<string, object>
-    {
-        { "@userId", userId },
-        { "@page", page },
-        { "@pageSize", pageSize },
-        { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories },
-        { "@searchTerm", string.IsNullOrWhiteSpace(searchTerm) ? (object)DBNull.Value : searchTerm }
-    };
+            {
+                { "@userId", userId },
+                { "@page", page },
+                { "@pageSize", pageSize },
+                { "@categories", string.IsNullOrWhiteSpace(categories) ? (object)DBNull.Value : categories },
+                { "@searchTerm", string.IsNullOrWhiteSpace(searchTerm) ? (object)DBNull.Value : searchTerm }
+            };
 
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_GetSavedArticles_FP", con, paramDic);
 
             var articles = new List<SaveArticleRequest>();
+
+            // Read each record from SQL and map it to a SaveArticleRequest object
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -173,21 +206,19 @@ namespace server.DAL
             return articles;
         }
 
-
-
-
-        // Helper function to safely read string values from a SQL result row.
-        // In SQL Server, if a column contains NULL, accessing it with .ToString()
-        // will throw an exception (because DBNull cannot be cast to string).
-        // This method checks if the value is DBNull:
-        // - If it's NULL (DBNull.Value), it returns an empty string "".
-        // - Otherwise, it returns the string value of the column.
-        //
+        // ==========================
+        // Helper: Safely gets string value from a SqlDataReader column
+        // ==========================
+        // Why needed:
+        // - In SQL Server, NULL values are represented as DBNull.Value
+        // - Trying to cast DBNull.Value to string will cause an exception
+        // Behavior:
+        // - If column is NULL → returns empty string ""
+        // - Else → returns the string value
         // This avoids runtime errors and makes code cleaner and safer.
 
         // DBNull.Value represents a NULL from the database (SQL). It's not the same as C# null — 
         // it's a special object used to indicate that a column has no value in the database.
-
         private string SafeGetString(SqlDataReader reader, string columnName)
         {
             if (reader[columnName] == DBNull.Value)
@@ -199,6 +230,5 @@ namespace server.DAL
                 return reader[columnName].ToString();
             }
         }
-
     }
 }

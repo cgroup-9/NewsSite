@@ -1,21 +1,23 @@
-﻿// Returns true if the environment is development (localhost)
+﻿// Check if running in development (localhost)
 function isDevEnv() {
     return location.host.includes("localhost");
 }
 
 const port = 7019;
 const baseApiUrl = isDevEnv()
-    ? `https://localhost:${port}`
-    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
+    ? `https://localhost:${port}` // Local API
+    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1"; // Deployed API
 
-// Initializes the chat UI after the page is loaded
+// When the page is ready, set up the chat UI
 document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.querySelector(".avatar button");
     const chatContainer = document.querySelector(".chat-container");
 
     startBtn.addEventListener("click", () => {
+        // Hide start button
         startBtn.style.display = "none";
 
+        // Create chat elements
         const chatBox = document.createElement("div");
         chatBox.className = "chat-box";
 
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionChoices = document.createElement("div");
         questionChoices.className = "question-choices";
 
-        // Predefined questions for the admin to choose from
+        // Predefined questions for admin
         const questions = [
             { id: 1, text: "Which day had the highest number of logins in the past week?" },
             { id: 2, text: "Which day had the highest number of logins in the past month?" },
@@ -44,37 +46,38 @@ document.addEventListener("DOMContentLoaded", () => {
             questionChoices.appendChild(btn);
         });
 
+        // Add chat messages area and question buttons to the chat box
         chatBox.appendChild(chatMessages);
         chatBox.appendChild(questionChoices);
         chatContainer.appendChild(chatBox);
     });
 });
 
-// Handles user's question click and sends request to AI API
+// Handles when an admin clicks a question
 function handleUserQuestion(questionId, questionText) {
     const chatMessages = document.getElementById("chatMessages");
 
-    // Display user's question in chat
+    // Show admin's question
     const userMsg = document.createElement("div");
     userMsg.className = "chat-message user";
     userMsg.textContent = questionText;
     chatMessages.appendChild(userMsg);
 
-    // Send GET request to the AI API with the selected question ID
+    // Send request to AI API
     ajaxCall(
         "GET",
         `${baseApiUrl}/api/ai/question/${questionId}`,
         null,
-        function (data) {
-            // Display AI's response
+        data => {
+            // Show AI's response
             const botMsg = document.createElement("div");
             botMsg.className = "chat-message bot";
             botMsg.textContent = `🤖 ${data.answer}`;
             chatMessages.appendChild(botMsg);
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
         },
-        function (error) {
-            // Show error message if API call fails
+        error => {
+            // Show error if request fails
             const botMsg = document.createElement("div");
             botMsg.className = "chat-message bot error";
             botMsg.textContent = "⚠️ Error fetching AI response.";

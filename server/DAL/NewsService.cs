@@ -1,56 +1,60 @@
-﻿using System.Net.Http;
-using System.Text.Json;
+﻿using System.Net.Http;     // For making HTTP requests
+using System.Text.Json;    // For serializing and deserializing JSON
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using server.Models;
-using server.DAL;
+using server.Models;       // Contains the Article model
+using server.DAL;          // Data Access Layer for DB services
 
 namespace server.DAL
 {
     public class NewsService
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
+        private readonly HttpClient _httpClient; // Used for making requests to the News API
+        private readonly string _apiKey;         // News API key (loaded from configuration)
 
+        // Constructor – receives configuration so it can read the API key
         public NewsService(IConfiguration config)
         {
-            // Initialize HttpClient and set a User-Agent header (required by some APIs)
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "MyNewsApp");
+            // Some APIs require a User-Agent header, so we set a default
 
-            // API key for authenticating with the News API
             _apiKey = config["ApiKeys:NewsApi"];
+            // Read the News API key from appsettings.json or environment variables
         }
 
-        // This method fetches top news headlines from the API based on country and (optionally) multiple categories
+        // ===================== MAIN METHOD =====================
+        // Fetches top headlines from News API for a specific country
+        // Optionally supports multiple categories separated by commas
         public async Task<List<Article>> GetTopHeadlinesAsync(string country = "us", string? categories = null)
         {
-            // 🔄 Register this call as an API fetch (for statistics, logging, or limits)
+            // 1️⃣ Log this API request in the database for analytics/statistics
             DBservicesArticles db = new DBservicesArticles();
             db.IncrementApiFetchCounter();
 
-            // If no categories provided, fetch general headlines
+            // 2️⃣ If no categories provided → fetch general top headlines
             if (string.IsNullOrWhiteSpace(categories))
             {
                 return await GetTopHeadlinesForCategoryAsync(country, null);
             }
 
-            // Split the comma-separated list of categories into a cleaned-up distinct list
-            var categoriesList = categories.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                                           .Select(c => c.ToLowerInvariant())
-                                           .Distinct()
-                                           .ToList();
+            // 3️⃣ Parse the comma-separated categories into a clean list (lowercase, no duplicates)
+            var categoriesList = categories
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(c => c.ToLowerInvariant())
+                .Distinct()
+                .ToList();
 
             var allArticles = new List<Article>();
 
-            // Fetch articles for each category separately
+            // 4️⃣ Loop over each category and fetch its headlines separately
             foreach (var category in categoriesList)
             {
                 var articlesForCategory = await GetTopHeadlinesForCategoryAsync(country, category);
 
                 if (articlesForCategory != null)
                 {
-                    // Mark each article with the corresponding category
+                    // Tag each article with its category
                     foreach (var article in articlesForCategory)
                         article.Category = category;
 
@@ -58,7 +62,7 @@ namespace server.DAL
                 }
             }
 
-            // Remove duplicate articles (based on URL) to avoid showing the same article twice
+            // 5️⃣ Remove duplicates based on URL (avoids showing the same article twice)
             var distinctArticles = allArticles
                 .GroupBy(a => a.Url)
                 .Select(g => g.First())
@@ -67,20 +71,21 @@ namespace server.DAL
             return distinctArticles;
         }
 
-        // This helper method fetches top headlines from the News API for a specific category and country
+        // ===================== HELPER METHOD =====================
+        // Fetches top headlines for a single category and country
         private async Task<List<Article>> GetTopHeadlinesForCategoryAsync(string country, string? category)
         {
-            // Construct the API URL with query parameters
+            // 1️⃣ Build the base API URL with country and API key
             string url = $"https://newsapi.org/v2/top-headlines?country={country}&apiKey={_apiKey}";
 
-            // Append category to the URL if it's specified
+            // 2️⃣ If category is specified, add it to the URL
             if (!string.IsNullOrEmpty(category))
                 url += $"&category={category}";
 
-            // Make the HTTP request to the News API
+            // 3️⃣ Send GET request to News API
             HttpResponseMessage response = await _httpClient.GetAsync(url);
 
-            // If the response failed, throw an exception with detailed message
+            // 4️⃣ If request failed, read the error body and throw an exception
             if (!response.IsSuccessStatusCode)
             {
                 string errorContent = await response.Content.ReadAsStringAsync();
@@ -88,25 +93,26 @@ namespace server.DAL
                 throw new Exception(message);
             }
 
-            // Read the response body as JSON
+            // 5️⃣ Read the JSON response as string
             string json = await response.Content.ReadAsStringAsync();
 
-            // Deserialize the JSON response into a NewsApiResponse object
+            // 6️⃣ Deserialize JSON into a NewsApiResponse object
             NewsApiResponse? result = JsonSerializer.Deserialize<NewsApiResponse>(json, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true // Makes JSON parsing case-insensitive
+                PropertyNameCaseInsensitive = true // Ignore case in JSON property names
             });
 
-            // Return the list of articles, or an empty list if none were found
+            // 7️⃣ Return articles list, or empty list if null
             return result?.Articles ?? new List<Article>();
         }
 
-        // Internal class to match the structure of the News API JSON response
+        // ===================== RESPONSE MODEL =====================
+        // Matches the structure of the News API's JSON response
         public class NewsApiResponse
         {
             public string? Status { get; set; }           // "ok" or "error"
-            public int TotalResults { get; set; }         // Total number of articles returned
-            public List<Article>? Articles { get; set; }  // List of Article objects
+            public int TotalResults { get; set; }         // Total number of results
+            public List<Article>? Articles { get; set; }  // List of articles
         }
     }
 }

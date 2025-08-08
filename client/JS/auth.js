@@ -1,24 +1,23 @@
-﻿// Retrieves the current user from session storage, or returns null if not found
+﻿// Retrieves the current user from sessionStorage (returns null if not found)
 function getCurrentUser() {
-    const json = sessionStorage.getItem("currentUser");
-    return json ? JSON.parse(json) : null;
+    const json = sessionStorage.getItem("currentUser"); // Get stored JSON string
+    return json ? JSON.parse(json) : null; // Parse to object if exists
 }
 
-// Redirects to login page if user is not logged in (unless already on login or index)
-// If user is admin, redirects to admin panel
+// Enforces login rules and redirects if needed
 function requireLogin() {
-    const user = getCurrentUser();
+    const user = getCurrentUser(); // Get logged-in user object
 
+    // If not logged in AND not on index or login page → redirect to login
     if (!location.pathname.endsWith("index.html") &&
         !location.pathname.endsWith("login.html") &&
         !user) {
-        // Not logged in and not on login or index -> redirect to login
         alert("You must be logged in.");
         location.href = "login.html";
         return;
     }
 
-    // If logged in as admin and not on admin page -> redirect to admin page
+    // If logged in as admin AND not already on an admin page → redirect to admin dashboard
     if (
         user &&
         user.name?.toLowerCase() === "admin" &&
@@ -26,39 +25,37 @@ function requireLogin() {
         !location.pathname.endsWith("adminUsersManagement.html") &&
         !location.pathname.endsWith("adminReportedComments.html") &&
         !location.pathname.endsWith("adminAiQuestions.html")
-
     ) {
         location.href = "adminIndex.html";
     }
-
 }
 
-// Logs out the current user: clears session storage, shows alert, redirects to homepage
+// Logs the user out: clears session, alerts, redirects to home
 function logout() {
-    sessionStorage.clear();
+    sessionStorage.clear(); // Remove all stored session data
     alert("Logged out successfully!");
-    location.href = "index.html";
+    location.href = "index.html"; // Redirect to homepage
 }
 
-// Updates the login/logout button depending on user state
+// Updates the login/logout button based on current user state
 function updateAuthButton() {
-    const btn = document.getElementById("authBtn");
-    const user = getCurrentUser();
+    const btn = document.getElementById("authBtn"); // Auth button element
+    const user = getCurrentUser(); // Current logged-in user
 
-    if (!btn) return;
+    if (!btn) return; // Exit if button is missing
 
     if (user) {
-        // If user is logged in, show logout with their name
+        // Show logout with user name
         btn.textContent = `🚪 Logout (${user.name})`;
         btn.onclick = logout;
     } else {
-        // If not logged in, show login button
+        // Show login button
         btn.textContent = "🔐 Login";
         btn.onclick = () => location.href = "login.html";
     }
 }
 
-// When page loads, check if user is logged in and update the auth button
+// On page load: enforce login rules and update button state
 document.addEventListener("DOMContentLoaded", () => {
     requireLogin();
     updateAuthButton();

@@ -1,16 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Sets HTML document type to HTML5 and language to English -->
+    <!-- UTF-8 encoding allows all languages and special symbols to be displayed correctly -->
     <meta charset="utf-8" />
+
+    <!-- Ensures the page scales correctly on all devices (important for mobile) -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login Page</title>
+
+    <title>Login Page</title> <!-- Browser tab title -->
+    <!-- jQuery library for easier DOM manipulation and AJAX requests -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- CSS for login page styling -->
     <link href="../CSS/loginStyle.css" rel="stylesheet" />
+
+    <!-- JavaScript for handling login form logic -->
     <script src="../JS/login.js"></script>
+
+    <!-- Centralized AJAX functions for communicating with the server -->
     <script src="../JS/ajaxCall.js"></script>
 </head>
 <body>
+    <!-- Empty container where the login form will be dynamically inserted by login.js -->
     <div id="loginContainer"></div>
 </body>
 </html>

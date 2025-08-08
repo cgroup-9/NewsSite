@@ -1,51 +1,78 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Shared Articles</title>
+    <meta charset="utf-8" /> <!-- Sets the character encoding to UTF-8 so all languages and symbols display correctly -->
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures responsive design for mobile devices -->
+    <title>Shared Articles</title> <!-- Title shown in the browser tab -->
+    <!-- Linking external CSS file for page styling -->
     <link href="../CSS/sharedArticleStyle.css" rel="stylesheet" />
+
+    <!-- Importing jQuery library for easier DOM manipulation and AJAX calls -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="../JS/pagination.js"></script>
-    <script src="../JS/ajaxCall.js"></script>
-    <script src="../JS/auth.js"></script>
+
+    <!-- External JavaScript files -->
+    <script src="../JS/pagination.js"></script> <!-- Handles page navigation (pagination) for shared articles -->
+    <script src="../JS/ajaxCall.js"></script> <!-- Contains reusable AJAX call functions -->
+    <script src="../JS/auth.js"></script> <!-- Handles authentication (login/logout) logic -->
+    <!-- Font Awesome library for icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Navigation bar styling -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
+    <!-- The navigation menu at the top of the page -->
     <nav class="mainNav" id="mainNav">
+        <!-- Each <a> tag is a navigation link to another page -->
         <a href="index.html" class="navItem logo">Home</a>
         <a href="myArticle.html" class="navItem">My Saved Article</a>
         <a href="sharedArticles.html" class="navItem">Shared Articles</a>
         <a href="editMyProfile.html" class="navItem">Edit My Profile</a>
+
+        <!-- Login/Logout button (text will change dynamically via JS depending on login state) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
-        <!-- hamburger -->
+
+        <!-- Hamburger menu button for small screens (mobile navigation) -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 lines represent the "hamburger" icon -->
         </button>
     </nav>
 
+    <!-- Main page heading -->
     <h1>📰 Articles Shared by Users</h1>
+
+    <!-- Button to open the "Hide Users" filter modal -->
     <div id="divBtnHideUser">
         <button id="openFilterModalBtn">Hide Users</button>
     </div>
 
-    <!-- Filter Modal -->
+    <!-- ===== FILTER MODAL ===== -->
+    <!-- This modal appears when the user wants to select which users to hide -->
     <div id="filterModal" class="modal">
         <div class="modal-content">
+            <!-- Close button (X icon) to hide the modal -->
             <span class="closeBtn">&times;</span>
             <h2>Select Users to Hide</h2>
+
+            <!-- List of checkboxes for each user (generated dynamically with JS) -->
             <div id="userCheckboxList" class="user-list"></div>
+
+            <!-- Button to apply the filter and hide selected users -->
             <button id="applyUserFilterBtn">Apply Filter</button>
         </div>
     </div>
 
+    <!-- Container for all shared articles (filled dynamically using JavaScript) -->
     <div id="sharedArticlesContainer"></div>
 
+    <!-- Pagination controls (next/previous page buttons, page numbers) -->
     <div id="paginationContainer"></div>
-    <script src="../JS/nav.js" defer></script>
+
+    <!-- Navigation bar functionality -->
+    <script src="../JS/nav.js" defer></script> <!-- defer means the script loads after HTML is parsed -->
+    <!-- Main script for fetching and displaying shared articles -->
     <script src="../JS/sharedArticles.js"></script>
 </body>
 </html>

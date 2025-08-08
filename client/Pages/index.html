@@ -1,43 +1,68 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <!-- UTF-8 encoding to support all languages and symbols -->
     <meta charset="utf-8" />
+
+    <!-- Makes the layout responsive on all devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title></title>
+    <title></title> <!-- Browser tab title (currently empty) -->
+    <!-- jQuery library for DOM manipulation and AJAX calls -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+
+    <!-- Main styling for this page -->
     <link href="../CSS/indexStyle.css" rel="stylesheet" />
+
+    <!-- JavaScript for authentication logic (login/logout state) -->
     <script src="../JS/auth.js"></script>
+
+    <!-- JavaScript for reusable AJAX functions -->
     <script src="../JS/ajaxCall.js"></script>
+
+    <!-- Font Awesome icon library -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Navigation bar styling -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 
 <body>
 
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
     <nav class="mainNav" id="mainNav">
+        <!-- Logo link to homepage -->
         <a href="index.html" class="navItem logo">Home</a>
+
+        <!-- Navigation links -->
         <a href="myArticle.html" class="navItem">My Saved Article</a>
         <a href="sharedArticles.html" class="navItem">Shared Articles</a>
         <a href="editMyProfile.html" class="navItem">Edit My Profile</a>
+
+        <!-- Login/Logout button (text changes dynamically) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
-        <!-- hamburger -->
+
+        <!-- Hamburger menu button for mobile view -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 lines that form the hamburger icon -->
         </button>
     </nav>
 
+    <!-- CATEGORY FILTER -->
+    <!-- Container for category filter options (populated dynamically by index.js) -->
     <div id="categoryFilter"></div>
 
+    <!-- Main script for loading and displaying homepage content -->
     <script src="../JS/index.js"></script>
 
-
+    <!-- NEWS CONTAINER -->
+    <!-- Will be filled dynamically with articles/news from API -->
     <div id="newsContainer"></div>
-    <script src="../JS/nav.js" defer></script>
 
+    <!-- Script for navigation bar interactivity (mobile menu toggle, etc.) -->
+    <script src="../JS/nav.js" defer></script>
 </body>
 </html>

@@ -1,23 +1,23 @@
 ﻿$(document).ready(() => {
-    const divEditUser = $("#editProfileContainer");
+    const divEditUser = $("#editProfileContainer"); // Container for edit profile form
 
-    // Detect if running on localhost (development mode)
+    // Check if running in local dev environment
     function isDevEnv() {
         return location.host.includes("localhost");
     }
 
-    // Set base API URL depending on environment (localhost or deployed)
+    // API base URL (switch between local and deployed)
     const port = 7019;
     const baseApiUrl = isDevEnv()
         ? `https://localhost:${port}`
         : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
 
-    const url = `${baseApiUrl}/api/Users/update-user`;
+    const url = `${baseApiUrl}/api/Users/update-user`; // Endpoint for updating user
 
-    // Get current user from session storage
+    // Get the currently logged-in user from sessionStorage
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-    // Function to send updated user to server
+    // Send PUT request to update user details
     function updateUser(user) {
         try {
             console.log("Sending updated user:", JSON.stringify(user));
@@ -28,7 +28,7 @@
         }
     }
 
-    // Callback on success
+    // Success callback for update request
     function updateUserSuc(res) {
         try {
             if (res && res.message) {
@@ -36,23 +36,23 @@
             } else {
                 alert("✔️ Profile updated successfully.\nPlease log in again to continue.");
             }
-            logout(); // Clears session and redirects
+            logout(); // Clear session and redirect to login
         } catch (e) {
             alert("⚠️ Profile updated, but response was invalid.");
             console.error("Response parse error:", e, res);
         }
     }
 
-    // Callback on failure
+    // Failure callback for update request
     function updateUserFa(err) {
         alert("❌ Failed to update user: " + err.statusText);
     }
 
-    // Render form to the page
+    // Clear container and add page title
     divEditUser.empty();
     divEditUser.append('<h2 class="fullRowTitle">Edit My Profile</h2>');
 
-    // Build and inject the form HTML (removed current password field)
+    // Build HTML form dynamically (placeholders show current values)
     let formHtml = `
         <form id="editForm">
             <label for="username">Username</label>
@@ -74,19 +74,20 @@
         </form>
     `;
 
+    // Insert form into the container
     divEditUser.append(formHtml);
 
-    // Submit button click handler
+    // Handle Save Changes button click
     $("#submitEdit").click(() => {
-        const inputName = $("#usernameTB").val().trim();
-        const inputPassword = $("#passwordTB").val().trim();
-        const inputEmail = $("#emailTB").val().trim();
+        const inputName = $("#usernameTB").val().trim();  // New name (if entered)
+        const inputPassword = $("#passwordTB").val().trim(); // New password (if entered)
+        const inputEmail = $("#emailTB").val().trim();  // New email (if entered)
 
-        // Clear previous errors
+        // Clear previous error messages
         $(".error-msg").text("");
         let hasError = false;
 
-        // Validate new password if entered
+        // Password validation (only if a new password was entered)
         if (inputPassword !== "") {
             const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
             if (!passRegex.test(inputPassword)) {
@@ -98,7 +99,7 @@
             }
         }
 
-        // Validate name and email format if filled in
+        // Validation rules for name and email (only if entered)
         const fields = [
             {
                 id: "usernameTB",
@@ -114,6 +115,7 @@
             }
         ];
 
+        // Check each field's validity
         fields.forEach(({ id, value, regex, msg }) => {
             const input = $(`#${id}`);
             const errorDiv = $(`#err-${id}`);
@@ -128,9 +130,10 @@
             }
         });
 
+        // Stop if validation failed
         if (hasError) return;
 
-        // Build final object to send
+        // Create the object to send to the server (use old values if new ones not entered)
         const userToUpdate = {
             id: currentUser.id,
             name: inputName || currentUser.name,
@@ -138,7 +141,7 @@
             email: inputEmail || currentUser.email
         };
 
-        // Send update request
+        // Send the update request
         updateUser(userToUpdate);
     });
 });

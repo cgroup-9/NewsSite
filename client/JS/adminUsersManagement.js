@@ -1,17 +1,17 @@
 ﻿let users = [];
 
-/* Detect dev env */
+/* Detect if running locally (development) */
 function isDevEnv() {
     return location.host.includes("localhost");
 }
 
 const port = 7019;
 const baseApiUrl = isDevEnv()
-    ? `https://localhost:${port}`
-    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1";
+    ? `https://localhost:${port}` // Local API URL
+    : "https://proj.ruppin.ac.il/cgroup9/test2/tar1"; // Deployed API URL
 const baseUrl = `${baseApiUrl}/api/Users`;
 
-/* Robust Admin detection (adapt to your model if needed) */
+/* Check if a user is an Admin (safe against property name variations) */
 function isAdminUser(u) {
     if (!u) return false;
     const role = (u.role || u.Role || "").toString().toLowerCase();
@@ -19,25 +19,31 @@ function isAdminUser(u) {
     return u.isAdmin === true || role === "admin" || name === "admin";
 }
 
-/* Fetch all users (server returns everyone) */
+/* Fetch all users from the server */
 function loadUsers() {
     ajaxCall(
         "GET",
         `${baseUrl}/getAllUseresAdmin`,
         null,
-        res => { users = Array.isArray(res) ? res : []; renderUsers(); },
-        err => { console.error("Failed to load users:", err); alert("Couldn't fetch users."); }
+        res => {
+            users = Array.isArray(res) ? res : [];
+            renderUsers();
+        },
+        err => {
+            console.error("Failed to load users:", err);
+            alert("Couldn't fetch users.");
+        }
     );
 }
 
-/* Toggle user active flag (protect against accidental admin ops anyway) */
+/* Toggle active/inactive status for a user (skips admins) */
 function toggleUserActive(userId) {
     const user = users.find(u => u.id == userId);
     if (!user) return;
 
-    // Safety guard: do nothing for admin, even if somehow clicked
+    // Protect admin accounts
     if (isAdminUser(user)) {
-        alert("Admin user is protected and won't be shown/modified here.");
+        alert("Admin user is protected and cannot be modified.");
         return;
     }
 
@@ -47,49 +53,58 @@ function toggleUserActive(userId) {
         `${baseUrl}/update-status`,
         JSON.stringify(payload),
         () => loadUsers(),
-        err => { console.error("Failed to update user:", err); alert("Failed to update status."); }
+        err => {
+            console.error("Failed to update user:", err);
+            alert("Failed to update status.");
+        }
     );
 }
 
-/* Reset to default (server-side action) */
+/* Reset all users to default state (server-side) */
 function handleResetToDefault() {
     ajaxCall(
         "POST",
         `${baseUrl}/reset-to-default`,
         null,
         () => loadUsers(),
-        err => { console.error("Reset failed:", err); alert("Failed to reset."); }
+        err => {
+            console.error("Reset failed:", err);
+            alert("Failed to reset.");
+        }
     );
 }
 
-/* Delete all (server-side action) */
+/* Delete all users (server-side) */
 function handleClearAllData() {
     ajaxCall(
         "DELETE",
         `${baseUrl}/delete-all`,
         null,
         () => loadUsers(),
-        err => { console.error("Delete-all failed:", err); alert("Failed to delete users."); }
+        err => {
+            console.error("Delete-all failed:", err);
+            alert("Failed to delete users.");
+        }
     );
 }
 
-/* Render table — filter out Admin client-side */
+/* Render users table (filters out admins from display) */
 function renderUsers() {
     const container = document.getElementById('userTableContainer');
     if (!container) return;
     container.innerHTML = '';
 
-    // Filter out admin ONLY for this table
+    // Only show non-admin users in table
     const visibleUsers = users.filter(u => !isAdminUser(u));
 
     if (visibleUsers.length === 0) {
-        container.innerHTML = "<p style='text-align:center'>No user data to display for this action.</p>";
+        container.innerHTML = "<p style='text-align:center'>No user data to display.</p>";
         return;
     }
 
     const table = document.createElement('table');
 
-    // Header
+    // Build header
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
     ['ID', 'Name', 'Email', 'Status', 'Action'].forEach(text => {
@@ -100,7 +115,7 @@ function renderUsers() {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    // Body
+    // Build body rows
     const tbody = document.createElement('tbody');
     visibleUsers.forEach(user => {
         const tr = document.createElement('tr');
@@ -122,7 +137,7 @@ function renderUsers() {
     table.appendChild(tbody);
     container.appendChild(table);
 
-    // Event delegation for action buttons
+    // Handle button clicks in table
     table.addEventListener('click', e => {
         if (e.target.tagName === 'BUTTON' && e.target.dataset.userId) {
             toggleUserActive(e.target.dataset.userId);
@@ -130,7 +145,7 @@ function renderUsers() {
     });
 }
 
-/* Init page */
+/* Initialize page: load users & set button events */
 function init() {
     loadUsers();
     document.getElementById('resetToDefaultButton')?.addEventListener('click', handleResetToDefault);

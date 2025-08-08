@@ -7,7 +7,12 @@ namespace server.DAL
 {
     public class DBservicesSharedArticles
     {
-        // Establishes a connection to the database using the connection string from appsettings.json
+        // ==========================
+        // Establishes a SQL connection
+        // ==========================
+        // Reads the connection string from appsettings.json
+        // Creates a new SqlConnection object
+        // Opens the connection and returns it
         private SqlConnection connect(string conString)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -19,14 +24,21 @@ namespace server.DAL
             return con;
         }
 
-        // Builds a SqlCommand for a stored procedure with optional parameters
+        // ==========================
+        // Creates a SqlCommand for a Stored Procedure
+        // ==========================
+        // spName   → stored procedure name
+        // con      → open SqlConnection
+        // paramDic → dictionary of parameters (name → value)
+        // Sets the CommandType to StoredProcedure
+        // Loops through all parameters and adds them to the command
         private SqlCommand CreateCommandWithStoredProcedureGeneral(string spName, SqlConnection con, Dictionary<string, object>? paramDic)
         {
             SqlCommand cmd = new SqlCommand
             {
                 Connection = con,
                 CommandText = spName,
-                CommandTimeout = 10,
+                CommandTimeout = 10, // seconds before timeout
                 CommandType = CommandType.StoredProcedure
             };
 
@@ -41,7 +53,13 @@ namespace server.DAL
             return cmd;
         }
 
-        // Inserts a shared article using SP_ShareArticle_FP
+        // ==========================
+        // Shares an article
+        // ==========================
+        // Calls stored procedure SP_ShareArticle_FP
+        // Passes userId, articleUrl, and comment
+        // Also defines a RETURN VALUE parameter to get result code from DB
+        // Common result codes: 1 = success, other values = errors (e.g., already shared)
         public int ShareArticle(SharedArticleRequest sharedArticle)
         {
             using SqlConnection con = connect("myProjDB");
@@ -54,7 +72,7 @@ namespace server.DAL
 
             SqlParameter returnParameter = new SqlParameter
             {
-                Direction = ParameterDirection.ReturnValue
+                Direction = ParameterDirection.ReturnValue // Tells SQL Server to store RETURN VALUE here
             };
             cmd.Parameters.Add(returnParameter);
 
@@ -62,6 +80,13 @@ namespace server.DAL
             return (int)returnParameter.Value;
         }
 
+        // ==========================
+        // Retrieves a paginated list of shared articles
+        // ==========================
+        // Supports filtering by:
+        // - HiddenUserIds (articles from these users will be excluded)
+        // - CurrentUserId (can be used to mark likes, etc.)
+        // Uses stored procedure SP_GetAllSharedArticles_FP
         public List<SharedArticleIndex> GetSharedArticles(string? hiddenUserIds = null, int page = 1, int pageSize = 20, int? currentUserId = null)
         {
             using SqlConnection con = connect("myProjDB");
@@ -82,6 +107,7 @@ namespace server.DAL
 
             List<SharedArticleIndex> sharedList = new();
 
+            // Reads each row from the DB and maps it into a SharedArticleIndex object
             using SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -105,16 +131,20 @@ namespace server.DAL
             return sharedList;
         }
 
-
-        // Reports a shared article using SP_ReportSharedArticle_FP
+        // ==========================
+        // Reports a shared article
+        // ==========================
+        // Calls stored procedure SP_ReportSharedArticle_FP
+        // Passes the ID of the reporter and the ID of the shared article
+        // Uses RETURN VALUE parameter to get result code
         public int ReportSharedArticle(ReportSharedArticleRequest reportRequest)
         {
             using SqlConnection con = connect("myProjDB");
             SqlCommand cmd = CreateCommandWithStoredProcedureGeneral("SP_ReportSharedArticle_FP", con, new Dictionary<string, object>
-    {
-        { "@ReporterUserId", reportRequest.ReporterUserId },
-        { "@SharedArticleId", reportRequest.SharedArticleId }
-    });
+            {
+                { "@ReporterUserId", reportRequest.ReporterUserId },
+                { "@SharedArticleId", reportRequest.SharedArticleId }
+            });
 
             SqlParameter returnParameter = new SqlParameter
             {
@@ -125,6 +155,12 @@ namespace server.DAL
             cmd.ExecuteNonQuery();
             return (int)returnParameter.Value;
         }
+
+        // ==========================
+        // Retrieves all reported shared articles (for admin panel)
+        // ==========================
+        // Uses stored procedure SP_GetReportedSharedArticles_FP
+        // Returns a list of ReportedCommentsAdminPanel objects
         public List<ReportedCommentsAdminPanel> GetReportedComments()
         {
             using SqlConnection con = connect("myProjDB");
@@ -149,9 +185,14 @@ namespace server.DAL
             return list;
         }
 
+        // ==========================
+        // Likes a shared article
+        // ==========================
+        // Inserts a record into SharedArticleLikes_FP
+        // If the (SharedId, UserId) pair already exists, SQL throws a duplicate key error
         public async Task<bool> LikeSharedArticleAsync(int sharedId, int userId)
         {
-            SqlConnection con = connect("myProjDB"); // כבר נפתח בפנים
+            SqlConnection con = connect("myProjDB");
             SqlCommand cmd = new SqlCommand("INSERT INTO SharedArticleLikes_FP (SharedId, UserId) VALUES (@SharedId, @UserId)", con);
             cmd.Parameters.AddWithValue("@SharedId", sharedId);
             cmd.Parameters.AddWithValue("@UserId", userId);
@@ -163,17 +204,21 @@ namespace server.DAL
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 2627) // Violation of PRIMARY KEY (duplicate like)
+                if (ex.Number == 2627) // Primary key violation = already liked
                     throw new Exception("You already liked this article.");
 
-                throw; // any other error
+                throw;
             }
             finally
             {
-                con.Close(); // נסגור בסוף ידנית
+                con.Close(); // Always close connection manually here
             }
         }
 
+        // ==========================
+        // Removes a like from a shared article
+        // ==========================
+        // Deletes the (SharedId, UserId) record from SharedArticleLikes_FP
         public async Task<bool> UnlikeSharedArticleAsync(int sharedId, int userId)
         {
             using SqlConnection con = connect("myProjDB");
@@ -191,7 +236,5 @@ namespace server.DAL
                 throw;
             }
         }
-
-
     }
 }

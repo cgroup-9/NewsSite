@@ -1,36 +1,59 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <!-- UTF-8 encoding to support all languages and symbols (including Hebrew and emojis) -->
     <meta charset="utf-8" />
+
+    <!-- Makes the layout responsive and adjusts to the device width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title></title>
+    <title></title> <!-- Browser tab title (currently empty) -->
+    <!-- jQuery library for DOM manipulation and AJAX requests -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+
+    <!-- JavaScript for handling profile edit functionality -->
     <script src="../JS/editMyProfile.js"></script>
+
+    <!-- CSS for styling the Edit My Profile page -->
     <link href="../CSS/editMyProfileStyle.css" rel="stylesheet" />
+
+    <!-- Centralized AJAX request functions -->
     <script src="../JS/ajaxCall.js"></script>
+
+    <!-- JavaScript for authentication logic (login/logout state) -->
     <script src="../JS/auth.js"></script>
+
+    <!-- Font Awesome icon library -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- CSS for navigation bar styling -->
     <link href="../CSS/navStyle.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- ===== MAIN NAV ===== -->
+    <!-- ===== MAIN NAVIGATION BAR ===== -->
     <nav class="mainNav" id="mainNav">
+        <!-- Navigation links -->
         <a href="index.html" class="navItem logo">Home</a>
         <a href="myArticle.html" class="navItem">My Saved Article</a>
         <a href="sharedArticles.html" class="navItem">Shared Articles</a>
         <a href="editMyProfile.html" class="navItem">Edit My Profile</a>
+
+        <!-- Login/Logout button (text changes dynamically) -->
         <button id="authBtn" class="navItem">🔐 Login</button>
-        <!-- hamburger -->
+
+        <!-- Hamburger icon for mobile navigation -->
         <button class="hamburger" aria-label="toggle menu">
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <!-- 3 lines = hamburger icon -->
         </button>
     </nav>
-    <div id="editProfileContainer"></div>
-    <script src="../JS/nav.js" defer></script>
 
+    <!-- Container where the profile edit form will be dynamically inserted by editMyProfile.js -->
+    <div id="editProfileContainer"></div>
+
+    <!-- JavaScript for handling navigation menu behavior -->
+    <script src="../JS/nav.js" defer></script>
 </body>
 </html>
