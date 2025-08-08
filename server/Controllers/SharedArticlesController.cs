@@ -104,8 +104,8 @@ namespace server.Controllers
         {
             try
             {
-                var db = new DBservicesSharedArticles();
-                bool success = await db.LikeSharedArticleAsync(like.SharedArticleId, like.UserId); // Adds like in DB
+                // *** שינוי: הקריאה ל-DBservices עוברת דרך המודל (LikeRequest) ***
+                bool success = await like.LikeAsync(); // Adds like in DB via model
                 return Ok(new { message = "Liked successfully" });
             }
             catch (Exception ex)
@@ -122,8 +122,8 @@ namespace server.Controllers
         {
             try
             {
-                var db = new DBservicesSharedArticles();
-                bool success = await db.UnlikeSharedArticleAsync(like.SharedArticleId, like.UserId); // Removes like in DB
+                // *** שינוי: הקריאה ל-DBservices עוברת דרך המודל (LikeRequest) ***
+                bool success = await like.UnlikeAsync(); // Removes like in DB via model
                 return Ok(new { message = "Unliked successfully" });
             }
             catch (Exception ex)
@@ -131,5 +131,6 @@ namespace server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }

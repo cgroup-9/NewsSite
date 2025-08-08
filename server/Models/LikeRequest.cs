@@ -19,5 +19,25 @@
 
         // The unique ID of the user performing the like/unlike action.
         public int UserId { get; set; }
+
+        // ======================
+        // Executes a "Like" action via DB layer
+        // ======================
+        // Delegates to DBservicesSharedArticles.LikeSharedArticleAsync
+        public async Task<bool> LikeAsync()
+        {
+            var db = new server.DAL.DBservicesSharedArticles();
+            return await db.LikeSharedArticleAsync(SharedArticleId, UserId);
+        }
+
+        // ======================
+        // Executes an "Unlike" action via DB layer
+        // ======================
+        // Delegates to DBservicesSharedArticles.UnlikeSharedArticleAsync
+        public async Task<bool> UnlikeAsync()
+        {
+            var db = new server.DAL.DBservicesSharedArticles();
+            return await db.UnlikeSharedArticleAsync(SharedArticleId, UserId);
+        }
     }
 }
